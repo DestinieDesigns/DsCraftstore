@@ -1,0 +1,2731 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Destinie's Craft Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Great+Vibes&family=Jost:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6efdc;
+        --surface: #fffaf0;
+        --surface-2: #f0e7cf;
+        --ink: #2e2b21;
+        --ink-soft: #6f6450;
+        --gold: #2f5d43;
+        --gold-bright: #3c7a57;
+        --gold-soft: #cfe0cd;
+        --line: #ddd2b6;
+        --chip-bg: #e9efdb;
+        --brand: #1f4d36;
+        --sold: #8c3b2e;
+        --error: #a33327;
+        --shadow: 0 10px 30px rgba(46, 74, 40, 0.14);
+        --radius: 14px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f2418;
+          --surface: #183324;
+          --surface-2: #1f4230;
+          --ink: #f2ecda;
+          --ink-soft: #c6bda1;
+          --gold: #9fd0ae;
+          --gold-bright: #bde3c9;
+          --gold-soft: #2c4f3a;
+          --line: #31543f;
+          --chip-bg: #22452f;
+          --brand: #bde3c9;
+          --sold: #e08a76;
+          --error: #f0927f;
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        * { transition: none !important; animation: none !important; }
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Jost", system-ui, sans-serif;
+        font-size: 17px;
+        line-height: 1.55;
+      }
+      img { display: block; max-width: 100%; }
+      button { font: inherit; cursor: pointer; }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 64px; }
+
+      /* ---------- Sticky bar & hero ---------- */
+      .sticky-bar {
+        position: sticky; top: 0; z-index: 40;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 8px 16px;
+        background: rgba(27, 66, 48, 0.97);
+        box-shadow: 0 2px 12px rgba(20, 40, 28, 0.35);
+      }
+      .sticky-name {
+        font-family: "Great Vibes", "Cormorant Garamond", Georgia, cursive;
+        font-size: 30px; line-height: 1; color: #f6efdc; white-space: nowrap;
+      }
+      .sticky-shop {
+        background: #d9b36a; color: #22301f; border: none; border-radius: 999px;
+        min-height: 48px; padding: 10px 22px; font-weight: 600; font-size: 16px; letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .sticky-shop:hover { background: #e6c37c; }
+
+      .hero { position: relative; overflow: hidden; background: #1b4230; }
+      .hero-band { position: relative; overflow: hidden; }
+      .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+      .hero-shade {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(16, 38, 26, 0.44) 0%, rgba(16, 38, 26, 0.16) 38%, rgba(16, 38, 26, 0.64) 100%);
+      }
+      .hero-inner {
+        position: relative; z-index: 1;
+        min-height: clamp(200px, 28svh, 280px);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; padding: 26px 20px 22px; color: #fdfaf1;
+      }
+      .hero-rule { color: #e8cf8f; letter-spacing: 0.35em; font-size: 15px; margin-bottom: 10px; }
+      .hero-over {
+        letter-spacing: 0.3em; text-transform: uppercase; font-size: 13px; font-weight: 600;
+        color: #f3e9cd; margin: 0 0 4px; text-shadow: 0 1px 8px rgba(10, 25, 16, 0.6);
+      }
+      .hero h1 {
+        font-family: "Great Vibes", "Cormorant Garamond", Georgia, cursive; font-weight: 400;
+        font-size: clamp(58px, 14vw, 88px); line-height: 1.05; margin: 0 0 8px; color: #fffdf6;
+        text-shadow: 0 3px 22px rgba(10, 25, 16, 0.55);
+      }
+      .hero .tagline {
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+        font-size: clamp(21px, 4.6vw, 27px); color: #fdf6e0; margin: 0;
+        text-shadow: 0 2px 12px rgba(10, 25, 16, 0.65);
+      }
+      .hero-btns {
+        position: relative; z-index: 1;
+        display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px;
+        padding: 12px 16px 14px;
+      }
+      .btn-hero {
+        flex: 1 1 150px; max-width: 360px;
+        min-height: 52px; padding: 10px 14px; border-radius: 999px;
+        font-size: 16px; font-weight: 600; letter-spacing: 0.03em; line-height: 1.25;
+        border: 2px solid transparent;
+      }
+      .btn-hero.solid { background: #d9b36a; color: #22301f; }
+      .btn-hero.solid:hover { background: #e6c37c; }
+      .btn-hero.ghost { background: rgba(20, 44, 31, 0.55); color: #fdfaf1; border-color: rgba(253, 250, 241, 0.85); }
+      .btn-hero.ghost:hover { background: rgba(20, 44, 31, 0.78); }
+      .hero-nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 26px; }
+      .hero-nav a {
+        color: #fdfaf1; text-decoration: none; font-size: 15px; font-weight: 500; letter-spacing: 0.05em;
+        padding: 10px 16px; min-height: 48px; display: inline-flex; align-items: center;
+        border: 1px solid rgba(253, 250, 241, 0.55); border-radius: 999px; background: rgba(20, 44, 31, 0.45);
+      }
+      .hero-nav a:hover { border-color: #e8cf8f; color: #e8cf8f; }
+
+      /* ---------- Shop grid ---------- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 26px;
+        margin-top: 30px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        display: flex; flex-direction: column;
+        text-align: left;
+        padding: 0;
+        width: 100%;
+        color: inherit;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+      .card:hover { transform: translateY(-3px); border-color: var(--gold-bright); }
+      .card .photo { position: relative; aspect-ratio: 4 / 4.4; overflow: hidden; background: var(--surface-2); }
+      .card .photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+      .badge-sold {
+        position: absolute; inset: auto 0 42% 0;
+        text-align: center;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 700; font-size: 34px; letter-spacing: 0.28em;
+        color: #fff;
+        background: rgba(60, 30, 20, 0.72);
+        padding: 8px 0 8px 0.28em;
+      }
+      .card .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+      .card h2 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 26px; font-weight: 700; line-height: 1.15; margin: 0;
+      }
+      .only-one {
+        align-self: flex-start;
+        background: var(--chip-bg);
+        color: var(--gold);
+        border: 1px solid var(--gold-soft);
+        font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+        padding: 3px 10px; border-radius: 999px;
+      }
+      .only-one.gone { color: var(--sold); border-color: var(--sold); background: transparent; }
+      .price { font-size: 18px; font-weight: 600; color: var(--ink); margin: 0; }
+      .card .view {
+        margin-top: auto; padding-top: 6px;
+        color: var(--gold); font-weight: 600; font-size: 15px; letter-spacing: 0.05em;
+      }
+
+      /* ---------- Storefront ---------- */
+      .store-hint {
+        text-align: center; color: var(--ink-soft);
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+        font-size: 20px; margin: 26px 0 0;
+      }
+      .scene {
+        margin-top: 22px;
+        background: linear-gradient(160deg, #265239 0%, #1b4230 55%, #13301f 100%);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+      .store-layout { display: grid; gap: 20px; }
+      @media (min-width: 1020px) {
+        .store-layout .directory { width: 100%; max-width: 760px; margin: 0 auto; }
+      }
+
+      /* Directory chalkboard */
+      .directory {
+        background: #22362a;
+        border: 9px solid #7c5227;
+        border-radius: 8px;
+        box-shadow: inset 0 0 0 2px rgba(243, 236, 216, 0.14), 0 8px 20px rgba(0, 0, 0, 0.28);
+        color: #f3ecd8;
+        padding: 14px 14px 8px;
+        display: flex; flex-direction: column;
+      }
+      .dir-head {
+        text-align: center; padding-bottom: 8px; margin-bottom: 4px;
+        border-bottom: 1px solid rgba(243, 236, 216, 0.35);
+      }
+      .dir-title {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 20px; font-weight: 600; line-height: 1.25; margin: 0;
+      }
+      .dir-heart { color: #d9b36a; font-size: 14px; margin-top: 3px; line-height: 1; }
+      .dir-row {
+        display: flex; align-items: center; gap: 12px; width: 100%;
+        background: none; border: none; border-bottom: 1px dashed rgba(243, 236, 216, 0.3);
+        color: inherit; text-align: left; padding: 10px 6px; min-height: 48px; font-size: 16.5px;
+        border-radius: 4px;
+      }
+      .dir-row:last-child { border-bottom: none; }
+      .dir-row:hover, .dir-row:focus-visible { background: rgba(243, 236, 216, 0.09); }
+      .dir-ico { flex: none; width: 24px; height: 24px; color: #cfe0cd; display: grid; place-items: center; }
+      .dir-ico svg { width: 22px; height: 22px; }
+      .dir-name { font-weight: 500; }
+      .dir-count { margin-left: auto; font-size: 13.5px; color: #bcd3ba; white-space: nowrap; }
+
+      /* Shop floor — built wooden shelving units */
+      #screen-walk-entrance .wrap { max-width: 1280px; padding-bottom: 88px; }
+      .shopfloor { display: grid; gap: 24px; align-content: start; align-items: start; }
+      @media (min-width: 720px) and (max-width: 1019px) { .shopfloor { grid-template-columns: 1fr 1fr; } }
+      @media (min-width: 1240px) { .shopfloor { grid-template-columns: 1fr 1fr; } }
+      .shelf-unit {
+        position: relative; display: block; width: 100%; padding: 0 2px;
+        background: none; border: none; color: inherit; text-align: center;
+        min-height: 48px;
+        transition: transform 0.18s ease;
+      }
+      .shelf-unit:hover { transform: translateY(-2px); }
+      .shelf-unit:focus-visible { outline: 3px solid #e8cf8f; outline-offset: 3px; border-radius: 10px; }
+      .unit-top {
+        display: block; height: 13px; border-radius: 6px 6px 3px 3px;
+        background:
+          repeating-linear-gradient(90deg, rgba(60, 35, 10, 0.16) 0 2px, transparent 2px 34px),
+          linear-gradient(180deg, #b08247, #8a5f2c 55%, #6e471e);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 226, 170, 0.45);
+      }
+      .unit-sign { display: block; position: relative; margin: 0 16px; }
+      .sign-chain {
+        position: absolute; top: 0; width: 4px; height: 14px;
+        background: repeating-linear-gradient(180deg, #d9b36a 0 3px, #8a6a25 3px 6px);
+        border-radius: 2px;
+      }
+      .sign-chain.left { left: 16%; }
+      .sign-chain.right { right: 16%; }
+      .sign-board {
+        display: block; margin-top: 13px; padding: 9px 12px 8px;
+        background: linear-gradient(180deg, #7c5227, #5f3f1c);
+        border: 2px solid #c9a24d; border-radius: 9px;
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 226, 170, 0.35);
+        color: #fdf6e0;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 22px; font-weight: 700; line-height: 1.15;
+      }
+      .unit-body {
+        display: block; position: relative; margin-top: 12px;
+        background: linear-gradient(180deg, #143325 0%, #1c4630 52%, #143325 100%);
+        border-radius: 6px;
+        box-shadow: inset 0 0 34px rgba(0, 0, 0, 0.55), inset 0 2px 8px rgba(0, 0, 0, 0.6);
+        padding: 6px 15px 0;
+      }
+      .unit-post {
+        position: absolute; top: 0; bottom: 0; width: 15px; z-index: 3;
+        background: linear-gradient(90deg, #54371a, #9c6c31 46%, #6e471e 78%, #4a2f13);
+        box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+      }
+      .unit-post.left { left: 0; border-radius: 6px 2px 2px 6px; }
+      .unit-post.right { right: 0; border-radius: 2px 6px 6px 2px; }
+      .unit-base {
+        display: block; height: 15px; margin: 0 -15px; position: relative; z-index: 3;
+        background:
+          repeating-linear-gradient(90deg, rgba(60, 35, 10, 0.15) 0 2px, transparent 2px 30px),
+          linear-gradient(180deg, #a87a3e, #7c5227 55%, #5f3f1c);
+        border-radius: 0 0 6px 6px;
+        box-shadow: inset 0 1px 0 rgba(255, 226, 170, 0.4);
+      }
+      .bay { display: block; position: relative; }
+      .bay-items {
+        display: flex; align-items: flex-end; justify-content: space-evenly; gap: 10px;
+        padding: 12px 8px 0; min-height: 92px;
+        position: relative; z-index: 2;
+      }
+      .bay-items.start { justify-content: flex-start; padding-left: 18px; }
+      .bay-items.end { justify-content: flex-end; padding-right: 18px; }
+      .plank {
+        display: block; height: 13px; position: relative; z-index: 1;
+        margin: 0 -15px;
+        background:
+          repeating-linear-gradient(90deg, rgba(60, 35, 10, 0.14) 0 2px, transparent 2px 26px),
+          linear-gradient(180deg, #c08d4b 0%, #96682f 45%, #71471f 100%);
+        box-shadow:
+          inset 0 2px 0 rgba(255, 228, 175, 0.55),
+          inset 0 -3px 0 rgba(43, 25, 8, 0.55),
+          0 12px 16px -6px rgba(255, 196, 96, 0.28),
+          0 14px 12px -8px rgba(0, 0, 0, 0.55);
+      }
+      .display-card {
+        position: relative; flex: 0 1 42%; max-width: 148px;
+        aspect-ratio: 4 / 4.7;
+        border: 3px solid #8a5f2c; border-radius: 5px;
+        outline: 1px solid #d9b36a;
+        background: #f3ecd8;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.45);
+      }
+      .display-card img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; border-radius: 2px; }
+      .feat-tag {
+        position: absolute; top: 6px; left: 6px; z-index: 2;
+        background: linear-gradient(180deg, #e8cf8f, #c9a24d); color: #3a2a10;
+        font-family: "Jost", system-ui, sans-serif; font-size: 10.5px; font-weight: 700;
+        letter-spacing: 0.1em; text-transform: uppercase;
+        padding: 3px 9px; border-radius: 999px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      }
+      .display-card::after {
+        content: ""; position: absolute; left: 5%; right: 5%; bottom: -8px; height: 10px;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 70%);
+        z-index: -1;
+      }
+      .display-card.tilt-l { transform: rotate(-1.2deg); }
+      .display-card.tilt-r { transform: rotate(1.2deg); }
+      .display-card.solo { flex-basis: 46%; max-width: 158px; }
+      .cat-plaque {
+        position: relative; flex: 0 1 44%; max-width: 150px;
+        background: linear-gradient(180deg, #7c5227, #5f3f1c);
+        border: 2px solid #c9a24d; border-radius: 8px;
+        color: #fdf6e0; padding: 12px 8px 10px;
+        font-family: "Cormorant Garamond", Georgia, serif; font-size: 19px; font-weight: 700; line-height: 1.15;
+        box-shadow: 0 4px 7px rgba(0, 0, 0, 0.45);
+      }
+      .cat-plaque::after {
+        content: ""; position: absolute; left: 8%; right: 8%; bottom: -8px; height: 9px;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5), transparent 70%);
+        z-index: -1;
+      }
+      .soon-tag {
+        display: inline-block; margin-top: 6px;
+        background: #d9b36a; color: #3a2a10;
+        font-family: "Jost", system-ui, sans-serif; font-size: 10.5px; font-weight: 700;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        padding: 2px 8px; border-radius: 999px;
+      }
+      .soon-sign { position: relative; display: block; }
+      .soon-sign-board {
+        display: inline-block; background: #fffaf0; color: #1f4d36;
+        border: 2px solid #c9a24d; border-radius: 8px;
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 700;
+        font-size: 20px; padding: 8px 16px 7px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      }
+      .soon-sign-base {
+        display: block; width: 64px; height: 7px; margin: 3px auto 0;
+        background: linear-gradient(180deg, #96682f, #71471f); border-radius: 3px;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+      }
+      .prop { flex: 0 0 auto; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.35)); }
+      .unit-shadow {
+        display: block; height: 20px; margin: 2px 18px 0;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), transparent 68%);
+      }
+      .unit-go {
+        display: block; margin-top: 2px;
+        color: #e8cf8f; font-weight: 600; font-size: 14.5px; letter-spacing: 0.04em;
+      }
+
+      /* Legacy category-list button styles (no longer used) */
+      .more-list { display: grid; gap: 16px; margin-top: 26px; max-width: 640px; }
+      .display-btn {
+        display: flex; align-items: center; gap: 18px; width: 100%;
+        text-align: left; color: inherit;
+        background: var(--surface); border: 1.5px solid var(--line);
+        border-radius: var(--radius); padding: 20px 22px;
+        box-shadow: var(--shadow);
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+      .display-btn:hover { transform: translateY(-2px); border-color: var(--gold-bright); }
+      .display-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+      .display-name {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 30px; font-weight: 700; line-height: 1.1;
+      }
+      .display-sub { color: var(--ink-soft); font-size: 15px; }
+      .display-go { color: var(--gold); font-weight: 600; font-size: 15px; letter-spacing: 0.04em; margin-top: 4px; }
+      .btn-shopall {
+        display: block; width: 100%; margin-top: 22px;
+        background: var(--gold); color: #fff; border: none; border-radius: 999px;
+        padding: 16px 28px; font-size: 18px; font-weight: 600; letter-spacing: 0.05em;
+        transition: background 0.15s ease;
+      }
+      @media (prefers-color-scheme: dark) {
+        .btn-shopall { color: #12291c; }
+      }
+      .btn-shopall:hover { background: var(--gold-bright); }
+
+      /* ---------- Featured items shelf ---------- */
+      .featured { margin-top: 38px; }
+      .featured-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+      .featured-head h2 {
+        font-family: "Cormorant Garamond", Georgia, serif; font-size: 32px; font-weight: 700; margin: 0;
+      }
+      .featured-head p { color: var(--ink-soft); margin: 0; font-size: 15.5px; }
+      .featured-rail {
+        display: flex; gap: 16px; margin-top: 16px;
+        overflow-x: auto; padding: 6px 2px 14px;
+        scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      }
+      .feat-card {
+        flex: 0 0 216px; scroll-snap-align: start;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+        overflow: hidden; box-shadow: var(--shadow); padding: 0; text-align: left; color: inherit;
+        display: flex; flex-direction: column;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+      .feat-card:hover { transform: translateY(-3px); border-color: var(--gold-bright); }
+      .feat-card .fphoto { display: block; aspect-ratio: 4 / 4.6; overflow: hidden; background: var(--surface-2); }
+      .feat-card .fphoto img { width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+      .feat-card .fbody { padding: 13px 15px 15px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+      .feat-card h3 { font-family: "Cormorant Garamond", Georgia, serif; font-size: 21px; font-weight: 700; line-height: 1.15; margin: 0; }
+      .feat-card .frow { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 4px; }
+      .feat-card .price { font-size: 17px; }
+      @media (min-width: 900px) {
+        .featured-rail { overflow-x: visible; }
+        .feat-card { flex: 1 1 0; }
+      }
+
+      /* ---------- Gold date badge (front-door promo banner) ---------- */
+      .sign-date-badge {
+        background: linear-gradient(180deg, #d9b36a, #bd8f3a); color: #2c2113;
+        font-weight: 700; letter-spacing: 0.14em; font-size: 15px;
+        padding: 8px 18px; border-radius: 999px; margin-top: 6px;
+        box-shadow: 0 3px 8px rgba(120, 84, 20, 0.35);
+      }
+      .grid-note { color: var(--ink-soft); margin: 0; font-size: 16px; }
+      .empty-state {
+        margin-top: 26px; text-align: center;
+        background: var(--surface); border: 1.5px dashed var(--line);
+        border-radius: var(--radius); padding: 54px 26px;
+      }
+      .empty-state .big {
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+        font-size: 26px; line-height: 1.35; color: var(--ink-soft); margin: 0;
+      }
+
+      /* ---------- Info sections ---------- */
+      .info { margin-top: 56px; display: grid; gap: 22px; }
+      @media (min-width: 760px) { .info { grid-template-columns: 1fr 1fr; } .info .wide { grid-column: 1 / -1; } }
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 26px 28px;
+      }
+      .panel h2 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 28px; font-weight: 700; margin: 0 0 10px;
+      }
+      .panel p { margin: 0 0 10px; color: var(--ink-soft); }
+      .panel p:last-child { margin-bottom: 0; }
+      .panel p strong, .panel li strong { color: var(--ink); }
+      .steps { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 12px; }
+      .steps li { display: flex; gap: 14px; align-items: flex-start; color: var(--ink-soft); }
+      .steps .n {
+        flex: none; width: 30px; height: 30px; border-radius: 50%;
+        border: 1px solid var(--gold); color: var(--gold);
+        display: grid; place-items: center;
+        font-family: "Cormorant Garamond", Georgia, serif; font-weight: 700; font-size: 17px;
+      }
+      .foot-note { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 44px; }
+
+      /* ---------- Walk Around views ---------- */
+      .walk-view .wrap { padding-bottom: 128px; }
+      .walk-head { text-align: center; padding-top: 28px; }
+      .walk-head h2 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(36px, 6.4vw, 48px); font-weight: 700; line-height: 1.1; margin: 0 0 6px;
+      }
+      .walk-head p {
+        color: var(--ink-soft); margin: 0;
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-size: 20px;
+      }
+      .walk-scene { margin-top: 22px; }
+      .aisle-single { max-width: 680px; margin: 0 auto; display: grid; gap: 22px; }
+      .aisle-single .display-card { max-width: 168px; }
+      .aisle-single .bay-items { min-height: 108px; }
+      .corner-grid { display: grid; gap: 26px; align-content: start; align-items: start; }
+      @media (min-width: 900px) { .corner-grid { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 560px) {
+        .scene { padding: 10px; margin-top: 10px; }
+        .walk-head { padding-top: 18px; }
+        .walk-head p { font-size: 18px; }
+        .aisle-single .display-card, .corner-grid .display-card { flex-basis: 37%; }
+        .aisle-single .bay-items, .corner-grid .bay-items { min-height: 76px; }
+        /* Compact Entrance: slim hero band, two-column chalkboard directory */
+        .hero-inner { min-height: clamp(168px, 25svh, 215px); padding: 20px 18px 18px; }
+        .hero h1 { font-size: 54px; }
+        .hero .tagline { font-size: 20px; }
+        .hero-btns { padding: 8px 12px 10px; }
+        .btn-hero { min-height: 48px; padding: 8px 10px; font-size: 15px; }
+        .store-layout { gap: 10px; }
+        .directory { display: grid; grid-template-columns: 1fr 1fr; column-gap: 10px; padding: 8px 10px 2px; }
+        .dir-head { grid-column: 1 / -1; padding-bottom: 4px; margin-bottom: 0; }
+        .dir-title { font-size: 16px; }
+        .dir-heart { margin-top: 2px; font-size: 12px; }
+        .dir-row {
+          flex-wrap: wrap; align-content: center; gap: 0 8px;
+          padding: 4px; min-height: 48px; font-size: 15px; line-height: 1.2;
+        }
+        .dir-ico { width: 18px; height: 18px; }
+        .dir-ico svg { width: 16px; height: 16px; }
+        .dir-name { flex: 1 1 auto; font-size: 13px; white-space: nowrap; }
+        .dir-count { order: 3; width: 100%; margin-left: 0; padding-left: 26px; font-size: 12px; }
+        .btn-shopall { margin-top: 16px; padding: 14px 24px; }
+      }
+
+      /* ---------- Storefront door (first screen) ---------- */
+      #screen-door {
+        height: 100svh; overflow: hidden; color: #fdf6e0;
+        background:
+          radial-gradient(120% 55% at 50% 92%, rgba(255, 190, 90, 0.18), transparent 62%),
+          repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.13) 0 3px, transparent 3px 48px),
+          linear-gradient(170deg, #265239 0%, #1b4230 55%, #10281a 100%);
+      }
+      .door-porch {
+        display: flex; flex-direction: column; align-items: center;
+        height: 100%; max-width: 920px; margin: 0 auto;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+      }
+      .door-row {
+        display: flex; align-items: stretch; gap: 14px;
+        flex: 1 1 auto; min-height: 0; width: 100%; margin-top: 14px;
+      }
+      .door-btn {
+        flex: 1 1 0; min-width: 0;
+        display: flex; flex-direction: column; align-items: center;
+        padding: 0; border: none; background: none;
+        cursor: pointer; color: #fdf6e0; font: inherit; text-align: center;
+        -webkit-tap-highlight-color: transparent; position: relative;
+      }
+      .door-btn:focus-visible { outline: 3px solid #e8cf8f; outline-offset: 4px; border-radius: 14px; }
+      .door-name-sign { position: relative; flex: none; }
+      .door-name-sign .sign-chain { height: 20px; }
+      .door-name-board {
+        display: block; margin-top: 19px; padding: 7px 26px 9px;
+        background: linear-gradient(180deg, #7c5227, #5f3f1c);
+        border: 2px solid #c9a24d; border-radius: 10px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 226, 170, 0.35);
+        font-family: "Great Vibes", "Cormorant Garamond", Georgia, cursive;
+        font-size: 32px; line-height: 1.15; color: #fdf6e0; white-space: nowrap;
+      }
+      .door-stage {
+        position: relative; flex: 1 1 auto; min-height: 0;
+        width: 100%; max-width: 330px;
+        perspective: 1200px;
+      }
+      .door-glow {
+        position: absolute; inset: 0; border-radius: 12px 12px 4px 4px;
+        background: radial-gradient(95% 90% at 50% 38%, #ffedb5, #f7b733 58%, #c47a16);
+        opacity: 0.35; transition: opacity 0.8s ease, box-shadow 0.8s ease;
+      }
+      .door-btn.opening .door-glow { opacity: 1; box-shadow: 0 0 90px 34px rgba(255, 190, 90, 0.55); }
+      .door-leaf {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column; gap: 11px; padding: 14px;
+        background: linear-gradient(165deg, #2c6850 0%, #1f4d36 52%, #173c29 100%);
+        border: 7px solid #54371a; border-radius: 12px 12px 4px 4px;
+        box-shadow: inset 0 0 0 2px rgba(255, 226, 170, 0.22), inset 0 0 26px rgba(0, 0, 0, 0.35), 0 18px 30px rgba(0, 0, 0, 0.5);
+        transform-origin: left center;
+        transition: transform 0.85s cubic-bezier(0.3, 0.7, 0.3, 1);
+      }
+      .door-btn.opening .door-leaf { transform: rotateY(-97deg); }
+      .door-glass {
+        position: relative; flex: none; height: 43%;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px;
+        background: #0d2417; border-radius: 6px;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+      .door-pane {
+        border-radius: 3px; position: relative; overflow: hidden;
+        background: linear-gradient(160deg, #ffedb0, #ffc46b 55%, #f49f3f);
+        box-shadow: inset 0 0 14px rgba(190, 110, 20, 0.45);
+      }
+      .door-pane::after {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(115deg, rgba(255, 255, 255, 0.4) 0%, transparent 42%);
+      }
+      .door-open-sign {
+        position: absolute; top: 10px; left: 50%; transform: translateX(-50%) rotate(-2deg); z-index: 2;
+        background: #143325; color: #ffd98a; border: 1.5px solid #c9a24d; border-radius: 4px;
+        font-size: 11px; font-weight: 700; letter-spacing: 0.22em; padding: 3px 10px 3px 12px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); white-space: nowrap;
+      }
+      .door-mid {
+        position: relative; flex: 1 1 auto; min-height: 64px;
+        border: 2px solid rgba(0, 0, 0, 0.42); border-radius: 6px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 18px rgba(0, 0, 0, 0.35);
+        display: grid; place-items: center;
+      }
+      .door-wreath { width: 86px; height: 86px; filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.4)); }
+      .door-plate {
+        position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+        width: 15px; height: 46px; border-radius: 8px;
+        background: linear-gradient(90deg, #8a6a25, #e8cf8f 50%, #a87f2e);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 0 3px rgba(60, 40, 5, 0.6);
+      }
+      .door-knob {
+        position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+        width: 31px; height: 31px; border-radius: 50%;
+        background: radial-gradient(circle at 34% 30%, #fdf0bd, #d9b36a 45%, #8a6a25 90%);
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.55), inset 0 -2px 4px rgba(60, 40, 5, 0.5);
+      }
+      .door-low {
+        flex: none; padding: 10px 8px;
+        border: 2px solid rgba(0, 0, 0, 0.42); border-radius: 6px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 18px rgba(0, 0, 0, 0.35);
+        display: grid; place-items: center;
+      }
+      .door-tag-board {
+        display: block; max-width: 250px;
+        background: linear-gradient(180deg, #7c5227, #5f3f1c);
+        border: 1.5px solid #c9a24d; border-radius: 7px;
+        box-shadow: 0 4px 9px rgba(0, 0, 0, 0.45);
+        color: #fdf6e0; padding: 6px 12px 7px;
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 600;
+        font-size: 16.5px; line-height: 1.25;
+      }
+      .door-prompt {
+        flex: none; margin-top: 14px;
+        background: #d9b36a; color: #22301f;
+        font-weight: 700; font-size: 16.5px; letter-spacing: 0.02em;
+        padding: 11px 26px; border-radius: 999px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+        animation: door-nudge 2.2s ease-in-out infinite;
+      }
+      @keyframes door-nudge {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+      }
+
+      /* ---------- Promotional banner beside the front door ---------- */
+      .promo-banner {
+        flex: 0 0 clamp(142px, 41%, 235px);
+        display: flex; flex-direction: column; align-items: stretch;
+        min-height: 0;
+      }
+      .promo-rail {
+        flex: none; height: 10px; border-radius: 5px; position: relative; z-index: 2;
+        background: linear-gradient(180deg, #565d60, #23272a 70%);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      }
+      .promo-body {
+        position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden;
+        margin: 0 5px;
+        background:
+          radial-gradient(rgba(201, 162, 77, 0.16) 1.4px, transparent 2.1px) 6px 52px / 26px 30px,
+          radial-gradient(rgba(47, 93, 67, 0.13) 1.4px, transparent 2.1px) 19px 128px / 30px 34px,
+          linear-gradient(180deg, #fffdf6, #f6eed9);
+        color: #2c2a22; text-align: center;
+        border: 2.5px solid #1f4d36; border-top: none; border-radius: 0 0 4px 4px;
+        outline: 1.5px solid #c9a24d; outline-offset: -7px;
+        padding: 14px 12px 12px;
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      }
+      .promo-bunting { display: flex; gap: 3px; flex: none; }
+      .promo-bunting i {
+        width: 15px; height: 11px; display: block;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        background: #2f5d43;
+      }
+      .promo-bunting i:nth-child(3n+2) { background: #c9a24d; }
+      .promo-bunting i:nth-child(3n) { background: #b0603f; }
+      .promo-masthead {
+        font-family: "Great Vibes", "Cormorant Garamond", Georgia, cursive;
+        font-size: clamp(20px, 5.6vw, 30px); color: #1f4d36; margin: 0; line-height: 1.15;
+      }
+      .promo-head {
+        font-family: "Cormorant Garamond", Georgia, serif; font-weight: 700;
+        font-size: clamp(18px, 5vw, 26px); line-height: 1.12; color: #1f4d36; margin: 2px 0 0;
+      }
+      .promo-name {
+        font-family: "Cormorant Garamond", Georgia, serif; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.03em;
+        font-size: clamp(21px, 6vw, 32px); line-height: 1.08; color: #1f4d36; margin: 4px 0 0;
+      }
+      .promo-body .sign-date-badge {
+        margin-top: 4px; font-size: clamp(12px, 3.4vw, 15px); padding: 7px 15px;
+      }
+      .promo-when {
+        font-weight: 600; font-size: clamp(12px, 3.4vw, 15.5px); line-height: 1.35; margin: 4px 0 0;
+      }
+      .promo-where {
+        color: #5c5546; font-size: clamp(11.5px, 3.2vw, 15px); line-height: 1.4; margin: 0;
+      }
+      .promo-line {
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 600;
+        font-size: clamp(14.5px, 4.2vw, 19px); line-height: 1.25; color: #1f4d36; margin: 6px 0 0;
+      }
+      .promo-host {
+        margin: auto 0 0; padding-top: 10px;
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+        font-size: clamp(11px, 3vw, 14px); line-height: 1.3; color: #5c5546;
+      }
+      .promo-base {
+        flex: none; height: 15px; margin: 0 -4px; border-radius: 4px; position: relative; z-index: 2;
+        background: linear-gradient(180deg, #4a5054, #1d2023 75%);
+        box-shadow: 0 10px 16px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      }
+      .map-room.door-room { grid-column: 1 / -1; }
+
+      /* ---------- Print Wall — gallery of empty frames ---------- */
+      .pw-sign { position: relative; max-width: 300px; margin: 4px auto 2px; text-align: center; }
+      .pw-sign .sign-chain { height: 18px; }
+      .pw-sign-board {
+        display: block; margin-top: 17px; padding: 8px 18px 9px;
+        background: linear-gradient(180deg, #e8cf8f, #c9a24d 60%, #b18c34);
+        border: 2px solid #8a6a25; border-radius: 9px;
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 250, 230, 0.7);
+        color: #2c2113;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 24px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.15;
+      }
+      .pw-wall {
+        position: relative; margin: 20px auto 0; max-width: 620px;
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 62px; grid-auto-flow: dense; gap: 12px;
+        padding: 10px 4px; border-radius: 8px;
+        background:
+          radial-gradient(58% 42% at 28% 0%, rgba(255, 220, 150, 0.15), transparent 70%),
+          radial-gradient(52% 38% at 76% 6%, rgba(255, 220, 150, 0.11), transparent 70%);
+      }
+      @media (min-width: 700px) { .pw-wall { grid-auto-rows: 80px; gap: 14px; } }
+      .pw-frame {
+        position: relative; padding: 7px; border-radius: 3px;
+        box-shadow: 0 10px 18px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 235, 190, 0.35);
+      }
+      .pw-frame.wood { background: linear-gradient(155deg, #a87a3e, #71471f 55%, #54371a); }
+      .pw-frame.gold { background: linear-gradient(155deg, #e8cf8f, #c9a24d 55%, #9c7a28); }
+      .pw-mat {
+        height: 100%; padding: 8px;
+        background: linear-gradient(180deg, #fdf8ec, #f3ecd8);
+        box-shadow: inset 0 0 0 1px rgba(122, 90, 40, 0.25), inset 0 2px 6px rgba(90, 70, 30, 0.18);
+        display: grid; place-items: center;
+      }
+      .pw-art {
+        width: 100%; height: 100%; display: grid; place-items: center;
+        background: linear-gradient(180deg, #f7efdb, #efe4c8);
+        box-shadow: inset 0 0 12px rgba(122, 90, 40, 0.16);
+      }
+      .pw-art svg { width: 36%; max-width: 46px; color: #3c7a57; opacity: 0.26; }
+      .pw-f1 { grid-column: span 1; grid-row: span 3; }
+      .pw-f2 { grid-column: span 3; grid-row: span 2; }
+      .pw-f4 { grid-column: span 1; grid-row: span 2; }
+      .pw-f5 { grid-column: span 1; grid-row: span 1; }
+      .pw-placard { grid-column: span 2; grid-row: span 2; }
+      .pw-placard .pw-mat { padding: 10px; }
+      .pw-placard-text { text-align: center; }
+      .pw-placard-title {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 21px; font-weight: 700; line-height: 1.1; color: #1f4d36; margin: 0;
+      }
+      .pw-placard-sub {
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+        font-size: 14.5px; line-height: 1.35; color: #6f6450; margin: 5px 0 0;
+      }
+      .pw-actions { max-width: 440px; margin: 20px auto 2px; }
+      .pw-actions .btn-gold { min-height: 54px; }
+
+
+      /* ---------- Themed jewelry displays: pegboard & bracelet rolls ---------- */
+      .mount { display: block; }
+      .jdisp { display: block; text-align: center; }
+      .jdisp-frame { display: block; border-radius: 10px; }
+      .chalk-sign {
+        display: inline-block;
+        background: #22362a; color: #f3ecd8;
+        border: 3px solid #7c5227; border-radius: 6px;
+        font-family: "Cormorant Garamond", Georgia, serif; font-weight: 700;
+        font-size: 22px; letter-spacing: 0.02em; line-height: 1.15;
+        padding: 6px 20px 7px;
+        box-shadow: 0 4px 9px rgba(0, 0, 0, 0.35), inset 0 0 0 1.5px rgba(243, 236, 216, 0.28);
+      }
+      .dtag { display: block; margin-top: 6px; }
+      .dname {
+        display: block;
+        font-family: "Cormorant Garamond", Georgia, serif; font-weight: 700;
+        font-size: 14px; line-height: 1.12; color: #2e2b21;
+      }
+      .dprice {
+        display: inline-block; margin-top: 3px;
+        background: #1f4d36; color: #fdf6e0;
+        font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em;
+        padding: 1px 8px; border-radius: 999px;
+      }
+      .ctx-aisle .dname { display: none; }
+      .ctx-aisle .dtag { margin-top: 4px; }
+
+      /* Earrings pegboard */
+      .pegboard .jdisp-frame {
+        padding: 10px;
+        background: linear-gradient(155deg, #9c6c31, #71471f 55%, #54371a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 226, 170, 0.4);
+      }
+      .peg-surface {
+        display: block; border-radius: 5px; padding: 14px 12px 16px;
+        background:
+          radial-gradient(rgba(84, 55, 19, 0.5) 2.1px, transparent 2.8px) 0 0 / 22px 22px,
+          linear-gradient(180deg, #cfa76d, #bb8f4f);
+        box-shadow: inset 0 0 20px rgba(84, 55, 19, 0.5), inset 0 2px 6px rgba(84, 55, 19, 0.4);
+      }
+      .peg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 10px; margin-top: 16px; }
+      .peg-card {
+        position: relative; display: block; width: 100%;
+        background: linear-gradient(180deg, #fffdf6, #fdf3da);
+        border: 1px solid #e2d3ac; border-radius: 6px;
+        padding: 13px 6px 7px; text-align: center; color: #2e2b21;
+        box-shadow: 0 4px 8px rgba(60, 35, 5, 0.35);
+      }
+      button.peg-card { transition: box-shadow 0.15s ease; }
+      button.peg-card:hover { box-shadow: 0 7px 12px rgba(60, 35, 5, 0.45); }
+      .peg-card img { width: 100%; aspect-ratio: 1 / 1.02; object-fit: cover; object-position: center 35%; border-radius: 3px; }
+      .peg-hook {
+        position: absolute; top: -8px; left: 50%; transform: translateX(-50%); z-index: 2;
+        width: 17px; height: 11px;
+        border: 3px solid #a7adb2; border-bottom: none; border-radius: 9px 9px 0 0;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+      }
+      .peg-grid .peg-card:nth-child(3n+1) { transform: rotate(-0.5deg); }
+      .peg-grid .peg-card:nth-child(3n) { transform: rotate(0.5deg); }
+
+      /* Bracelet roll wall */
+      .rollwall .jdisp-frame {
+        padding: 16px 14px 20px;
+        background:
+          repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 2px, transparent 2px 46px),
+          linear-gradient(165deg, #5a3a1a, #3c2510 60%, #2e1c0a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 226, 170, 0.25);
+      }
+      .roll-row { display: block; margin-top: 36px; }
+      .roll-items { display: flex; justify-content: space-evenly; gap: 8px; padding: 0 4px; position: relative; z-index: 2; }
+      .roll-item {
+        position: relative; display: block; flex: 0 1 auto;
+        width: 31%; max-width: 118px;
+        background: none; border: none; padding: 0;
+        text-align: center; color: #2e2b21;
+      }
+      .roll-photo {
+        display: block; border-radius: 50%; overflow: hidden; aspect-ratio: 1;
+        border: 3px solid #d9b36a; background: #f3ecd8;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.45);
+        transition: border-color 0.15s ease;
+      }
+      .roll-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+      button.roll-item:hover .roll-photo, button.roll-item:focus-visible .roll-photo { border-color: #e8cf8f; }
+      .rollwall .dtag {
+        position: absolute; top: calc(100% - 5px); left: 50%; z-index: 3;
+        transform: translateX(-50%) rotate(-2deg);
+        min-width: 70px; margin-top: 0; padding: 2px 7px 3px;
+        background: #fffaf0; border: 1.5px solid #c9a24d; border-radius: 5px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+      }
+      .rollwall .dname { font-size: 12.5px; }
+      .rollwall .dprice { background: none; color: #1f4d36; padding: 0; margin-top: 0; font-size: 12.5px; }
+      .roll-bar {
+        display: block; height: 22px; margin-top: 32px; border-radius: 11px; position: relative;
+        background: linear-gradient(180deg, #f4e8cd 0%, #dec79e 42%, #b99c6c 78%, #96794e 100%);
+        box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.65), inset 0 -4px 6px rgba(90, 64, 25, 0.45), 0 8px 12px rgba(0, 0, 0, 0.4);
+      }
+      .roll-bar::before, .roll-bar::after {
+        content: ""; position: absolute; top: 1px; bottom: 1px; width: 14px; border-radius: 50%;
+        background: radial-gradient(circle at 40% 40%, #e8d5ab, #a5854f 75%);
+        box-shadow: inset 0 0 3px rgba(90, 64, 25, 0.6);
+      }
+      .roll-bar::before { left: -4px; }
+      .roll-bar::after { right: -4px; }
+
+      /* Display context sizes: aisle mini, close-up & category full */
+      .ctx-aisle .chalk-sign { font-size: 19px; padding: 5px 16px 6px; }
+      .pegboard.ctx-aisle .jdisp-frame { padding: 8px; }
+      .ctx-aisle .peg-surface { padding: 10px 9px 12px; }
+      .ctx-aisle .peg-grid { gap: 12px 7px; margin-top: 12px; }
+      .ctx-aisle .peg-card { padding: 10px 4px 5px; }
+      .rollwall.ctx-aisle .jdisp-frame { padding: 12px 10px 16px; }
+      .ctx-aisle .roll-row { margin-top: 26px; }
+      .ctx-aisle .roll-item { max-width: 84px; }
+      .ctx-aisle .roll-bar { height: 18px; margin-top: 24px; }
+      .ctx-close .chalk-sign { font-size: 24px; }
+      .ctx-close .peg-grid { gap: 18px 12px; }
+      .ctx-close .roll-item { max-width: 138px; }
+      .ctx-shop .roll-item { max-width: 130px; }
+      #grid-display { max-width: 880px; margin: 26px auto 0; }
+      .aisle-all { max-width: 440px; margin: 20px auto 2px; }
+      .aisle-all .btn-gold { min-height: 54px; }
+      @media (max-width: 560px) {
+        .ctx-shop .peg-grid, .ctx-close .peg-grid { grid-template-columns: repeat(3, 1fr); }
+        .ctx-shop .dname, .ctx-close .dname { font-size: 13px; }
+        .rollwall .dname { font-size: 11.5px; }
+      }
+
+      /* ---------- Phase 2 displays: gift shelves & coming soon corner ---------- */
+      .gift-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 680px; margin: 0 auto; align-items: start; }
+      .gift-grid .gift-wide { grid-column: 1 / -1; }
+      .gift-grid .ctx-aisle .chalk-sign { font-size: 15.5px; padding: 4px 10px 5px; }
+      .ctx-shop.gdisp, .ctx-close.gdisp { max-width: 600px; margin-left: auto; margin-right: auto; }
+      .gdisp .prop-plant { width: 46px; height: auto; }
+      .gdisp .prop-gift { width: 50px; height: auto; }
+      .ctx-aisle .prop-plant { width: 30px; }
+      .ctx-aisle .prop-gift { width: 34px; }
+      .ctx-close .prop-plant, .ctx-shop .prop-plant { width: 56px; }
+      .ctx-close .prop-gift, .ctx-shop .prop-gift { width: 60px; }
+
+      /* Fidget spinner counter display — spinner on a clear acrylic stand */
+      .spindisp .jdisp-frame {
+        padding: 14px 14px 0; overflow: hidden;
+        background:
+          radial-gradient(70% 46% at 50% 28%, rgba(255, 220, 150, 0.15), transparent 70%),
+          linear-gradient(180deg, #143325 0%, #1c4630 58%, #143325 100%);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), inset 0 0 30px rgba(0, 0, 0, 0.45);
+      }
+      .spin-counter { display: flex; align-items: flex-end; justify-content: center; gap: 16px; margin-top: 18px; padding: 0 8px; }
+      .spin-item {
+        position: relative; display: block; width: 48%; max-width: 172px;
+        background: linear-gradient(165deg, rgba(255, 255, 255, 0.55), rgba(216, 236, 229, 0.22) 55%, rgba(255, 255, 255, 0.38));
+        border: 1.5px solid rgba(255, 255, 255, 0.7); border-radius: 9px;
+        padding: 10px 10px 9px; text-align: center; color: #2e2b21;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.28);
+      }
+      button.spin-item { transition: box-shadow 0.15s ease; }
+      button.spin-item:hover { box-shadow: 0 11px 20px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.35); }
+      .spin-item::after {
+        content: ""; position: absolute; left: 7%; right: 7%; bottom: -8px; height: 8px;
+        background: linear-gradient(180deg, #c08d4b, #71471f); border-radius: 0 0 5px 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+      }
+      .spin-photo { display: block; }
+      .spin-photo img { width: 100%; aspect-ratio: 1 / 1.02; object-fit: cover; object-position: center 40%; border-radius: 5px; }
+      .spindisp .dtag { margin-top: 7px; }
+      .spin-shelf {
+        display: block; height: 15px; margin: 18px -14px 0;
+        background:
+          repeating-linear-gradient(90deg, rgba(60, 35, 10, 0.14) 0 2px, transparent 2px 26px),
+          linear-gradient(180deg, #c08d4b, #96682f 45%, #71471f);
+        box-shadow: inset 0 2px 0 rgba(255, 228, 175, 0.55), 0 -6px 14px -6px rgba(255, 196, 96, 0.25);
+      }
+      .ctx-aisle .spin-item { max-width: 132px; padding: 7px 7px 6px; }
+      .ctx-aisle .spin-counter { margin-top: 13px; gap: 10px; }
+      .ctx-close .spin-item, .ctx-shop .spin-item { max-width: 198px; }
+
+      /* Keychains — pegboard with empty hooks (reuses .pegboard frame & surface) */
+      .hook-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px 10px; margin-top: 22px; padding: 6px 8px 8px; }
+      .empty-hook {
+        display: block; margin: 0 auto; width: 21px; height: 18px;
+        border: 3.5px solid #9aa1a7; border-bottom: none; border-radius: 11px 11px 0 0;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+      }
+      .ctx-aisle .hook-grid { gap: 15px 6px; margin-top: 15px; padding: 4px 4px 6px; }
+      .ctx-aisle .empty-hook { width: 16px; height: 14px; border-width: 3px; }
+
+      /* Hair Accessories — bow board with empty shelves */
+      .hairdisp .jdisp-frame {
+        padding: 12px;
+        background: linear-gradient(155deg, #9c6c31, #71471f 55%, #54371a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 226, 170, 0.4);
+      }
+      .hair-scene {
+        display: block; border-radius: 6px; padding: 14px 14px 18px; text-align: center;
+        background: linear-gradient(180deg, #fdf3e2, #f6e7c9);
+        box-shadow: inset 0 0 18px rgba(150, 105, 40, 0.28);
+      }
+      .hair-ribbon {
+        display: block; height: 11px; border-radius: 6px; margin-top: 16px;
+        background: linear-gradient(90deg, #cf8a97, #eec3c9 30%, #d9a24d 50%, #eec3c9 70%, #cf8a97);
+        box-shadow: 0 2px 4px rgba(120, 70, 30, 0.3);
+      }
+      .hair-shelf {
+        display: block; position: relative; height: 12px; margin-top: 48px; border-radius: 3px;
+        background: linear-gradient(180deg, #c08d4b, #96682f 55%, #71471f);
+        box-shadow: 0 6px 8px rgba(120, 80, 30, 0.3), inset 0 1px 0 rgba(255, 228, 175, 0.6);
+      }
+      .hair-shelf.tight { margin-top: 34px; }
+      .hair-shelf .prop-plant { position: absolute; left: 9%; bottom: 11px; }
+      .ctx-aisle .hair-shelf { margin-top: 34px; }
+      .ctx-aisle .hair-shelf.tight { margin-top: 24px; }
+      .ctx-aisle .hair-shelf .prop-plant { bottom: 10px; }
+
+      /* Bookmarks — countertop stand with empty slots */
+      .bookdisp .jdisp-frame {
+        padding: 12px;
+        background: linear-gradient(155deg, #9c6c31, #71471f 55%, #54371a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 226, 170, 0.4);
+      }
+      .book-stand {
+        display: block; border-radius: 6px; padding: 14px 14px 0; text-align: center; overflow: hidden;
+        background: linear-gradient(180deg, #2c5a41, #1c4630);
+        box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.4);
+      }
+      .slot-row { display: flex; gap: 7px; margin-top: 18px; padding: 0 4px; }
+      .slot {
+        flex: 1 1 0; height: 74px;
+        border: 2px solid #c9a24d; border-bottom: none; border-radius: 6px 6px 0 0;
+        background: linear-gradient(180deg, rgba(255, 244, 214, 0.16), rgba(255, 244, 214, 0.03));
+        box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+      }
+      .book-base {
+        display: block; height: 15px; margin: 0 -14px;
+        background:
+          repeating-linear-gradient(90deg, rgba(60, 35, 10, 0.14) 0 2px, transparent 2px 26px),
+          linear-gradient(180deg, #c08d4b, #96682f 45%, #71471f);
+        box-shadow: inset 0 2px 0 rgba(255, 228, 175, 0.55);
+      }
+      .ctx-aisle .slot { height: 50px; }
+      .ctx-close .slot, .ctx-shop .slot { height: 94px; }
+
+      /* Domino Set — display table with an empty felt mat */
+      .domdisp .jdisp-frame {
+        padding: 14px 14px 16px;
+        background: linear-gradient(165deg, #5a3a1a, #3c2510 60%, #2e1c0a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 226, 170, 0.25);
+      }
+      .dom-table { display: block; margin-top: 20px; }
+      .dom-top {
+        display: block; padding: 12px; border-radius: 6px;
+        background: linear-gradient(180deg, #c08d4b, #96682f 60%, #71471f);
+        box-shadow: 0 8px 14px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 228, 175, 0.5);
+      }
+      .dom-mat {
+        display: block; height: 62px; border-radius: 5px;
+        background: linear-gradient(180deg, #2f5d43, #22452f);
+        box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.45), inset 0 0 0 2px rgba(232, 207, 143, 0.25);
+      }
+      .dom-legs { display: flex; justify-content: space-between; padding: 0 18px; }
+      .dom-leg { width: 13px; height: 36px; background: linear-gradient(90deg, #54371a, #7c5227, #4a2f13); border-radius: 0 0 3px 3px; }
+      .ctx-aisle .dom-mat { height: 42px; }
+      .ctx-aisle .dom-leg { height: 24px; }
+      .ctx-close .dom-mat, .ctx-shop .dom-mat { height: 80px; }
+
+      /* Mugs & Tumblers — warm wooden shelf wall, shelves empty */
+      .mugdisp .jdisp-frame {
+        padding: 12px;
+        background: linear-gradient(155deg, #7c5227, #54371a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 226, 170, 0.35);
+      }
+      .mug-wall {
+        display: block; border-radius: 6px; padding: 12px 12px 14px; text-align: center;
+        background: linear-gradient(180deg, #b08247, #8a5f2c);
+        box-shadow: inset 0 0 22px rgba(60, 35, 5, 0.45);
+      }
+      .mug-row { display: block; position: relative; min-height: 56px; margin-top: 10px; }
+      .mug-row .prop-plant { position: absolute; left: 6%; bottom: 13px; }
+      .mug-row .prop-gift { position: absolute; right: 6%; bottom: 13px; }
+      .mug-plank {
+        display: block; position: absolute; left: 0; right: 0; bottom: 0; height: 12px; border-radius: 3px;
+        background: linear-gradient(180deg, #e0b96e, #b08247 55%, #7c5227);
+        box-shadow: 0 5px 7px rgba(60, 35, 5, 0.35), inset 0 1px 0 rgba(255, 240, 200, 0.7);
+      }
+      .ctx-aisle .mug-row { min-height: 40px; margin-top: 7px; }
+
+      /* Shirts & Aprons — clothing rack with empty hangers only */
+      .rackdisp .jdisp-frame {
+        padding: 12px;
+        background: linear-gradient(155deg, #9c6c31, #71471f 55%, #54371a);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 226, 170, 0.4);
+      }
+      .rack-scene {
+        display: block; position: relative; border-radius: 6px; padding: 14px 14px 0; text-align: center; overflow: hidden;
+        background: linear-gradient(180deg, #fdf8ec, #f1e6c8);
+        box-shadow: inset 0 0 18px rgba(150, 105, 40, 0.25);
+      }
+      .rack-stand { display: block; position: relative; margin-top: 24px; padding: 0 10px; }
+      .rack-post { position: absolute; top: -5px; width: 8px; height: 118px; border-radius: 4px; background: linear-gradient(90deg, #54371a, #8a5f2c, #4a2f13); }
+      .rack-post.left { left: 3px; }
+      .rack-post.right { right: 3px; }
+      .rack-bar {
+        display: block; position: relative; z-index: 2; height: 9px; border-radius: 5px;
+        background: linear-gradient(180deg, #d7dade, #8f979e 60%, #6f767d);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .rack-hangers { display: flex; justify-content: space-evenly; margin-top: -3px; padding: 0 8px; }
+      .hanger { width: 36px; height: auto; }
+      .rack-floor {
+        display: block; height: 13px; margin: 34px -14px 0;
+        background:
+          repeating-linear-gradient(90deg, rgba(60, 35, 10, 0.14) 0 2px, transparent 2px 26px),
+          linear-gradient(180deg, #c08d4b, #96682f 45%, #71471f);
+        box-shadow: inset 0 2px 0 rgba(255, 228, 175, 0.55);
+      }
+      .ctx-aisle .rack-post { height: 86px; }
+      .ctx-aisle .hanger { width: 26px; }
+      .ctx-aisle .rack-floor { margin-top: 22px; }
+      .ctx-close .rack-post, .ctx-shop .rack-post { height: 142px; }
+      .ctx-close .hanger, .ctx-shop .hanger { width: 42px; }
+
+      /* ---------- Walk Around bar ---------- */
+      .walk-bar {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+        display: none; align-items: center; gap: 10px;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        background: rgba(27, 66, 48, 0.97);
+        box-shadow: 0 -2px 14px rgba(20, 40, 28, 0.35);
+      }
+      .walk-bar.on { display: flex; }
+      .walk-btn {
+        flex: none; min-height: 52px; padding: 10px 16px;
+        border-radius: 999px; border: 1.5px solid rgba(253, 250, 241, 0.7);
+        background: transparent; color: #fdfaf1; font-weight: 600; font-size: 15px;
+        white-space: nowrap;
+      }
+      .walk-btn:hover { border-color: #e8cf8f; color: #e8cf8f; }
+      .walk-btn.gone { display: none; }
+      .walk-mid {
+        flex: 1 1 auto; min-width: 0;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      }
+      .walk-where {
+        color: #e8cf8f; font-size: 12px; font-weight: 600;
+        letter-spacing: 0.08em; text-transform: uppercase; text-align: center; line-height: 1.25;
+      }
+      .walk-map-btn {
+        background: #d9b36a; color: #22301f; border: none; border-radius: 999px;
+        min-height: 48px; padding: 9px 24px; font-weight: 700; font-size: 16px; white-space: nowrap;
+      }
+      .walk-map-btn:hover { background: #e6c37c; }
+
+      /* ---------- Shelf close-up ---------- */
+      .closeup-stage { max-width: 720px; margin: 0 auto; }
+      .closeup-stage .shelf-unit { cursor: default; }
+      .closeup-stage .shelf-unit:hover { transform: none; }
+      .closeup-stage .display-card { max-width: 196px; }
+      .closeup-stage .cat-plaque { max-width: 190px; font-size: 22px; }
+      .closeup-stage .bay-items { min-height: 128px; }
+      .closeup-actions {
+        display: grid; gap: 12px; max-width: 480px; margin: 26px auto 0;
+      }
+      .closeup-actions .btn-gold { min-height: 54px; }
+      .closeup-actions .closeup-back { min-height: 52px; font-size: 16px; }
+
+      /* ---------- Store Map ---------- */
+      .map-plan { display: grid; gap: 14px; margin-top: 24px; }
+      @media (min-width: 640px) { .map-plan { grid-template-columns: 1fr 1fr; } }
+      .map-room {
+        position: relative; text-align: left; color: inherit;
+        background: var(--surface); border: 2px solid var(--gold-soft); border-radius: 14px;
+        padding: 24px 20px; min-height: 104px;
+        display: flex; flex-direction: column; gap: 4px;
+        box-shadow: var(--shadow);
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+      .map-room:hover { transform: translateY(-2px); border-color: var(--gold-bright); }
+      .map-room.wide { grid-column: 1 / -1; background: #1f4d36; color: #fdf6e0; border-color: #c9a24d; }
+      .map-room-name {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 27px; font-weight: 700; line-height: 1.15;
+      }
+      .map-room-sub { color: var(--ink-soft); font-size: 15px; }
+      .map-room.wide .map-room-sub { color: #cfe0cd; }
+      .map-here {
+        position: absolute; top: 10px; right: 10px;
+        background: #d9b36a; color: #22301f;
+        font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+        padding: 4px 11px; border-radius: 999px;
+      }
+
+      /* ---------- Product & claim screens ---------- */
+      .screen { display: none; }
+      .screen.active { display: block; animation: screen-in 0.38s ease both; }
+      @keyframes screen-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: none; }
+      }
+      .back-btn {
+        background: none; border: none; padding: 10px 0;
+        color: var(--gold); font-weight: 600; font-size: 16px; letter-spacing: 0.03em;
+      }
+      .product-top { padding-top: 8px; }
+      .product-top h2 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(32px, 6vw, 44px); font-weight: 700; line-height: 1.1; margin: 6px 0 10px;
+      }
+      .product-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+      .product-meta .price { font-size: 21px; }
+      .gallery { max-width: 560px; margin: 0 auto; }
+      .slider {
+        position: relative;
+        border-radius: var(--radius); overflow: hidden;
+        border: 1px solid var(--line); background: var(--surface-2);
+        box-shadow: var(--shadow);
+        touch-action: pan-y;
+        user-select: none; -webkit-user-select: none;
+      }
+      .slides { display: flex; transition: transform 0.35s ease; }
+      .slide { flex: 0 0 100%; aspect-ratio: 9 / 19.5; max-height: 78vh; background: var(--surface-2); }
+      .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+      .slide .soon-tile {
+        height: 100%; display: grid; place-items: center; text-align: center;
+        padding: 30px; color: var(--ink-soft);
+        font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-size: 24px;
+      }
+      .tap-zone {
+        position: absolute; top: 0; bottom: 0; width: 26%; z-index: 2;
+        background: none; border: none; padding: 0;
+        display: flex; align-items: center;
+      }
+      .tap-zone.prev { left: 0; justify-content: flex-start; }
+      .tap-zone.next { right: 0; justify-content: flex-end; }
+      .tap-zone .arrow {
+        width: 42px; height: 42px; margin: 0 8px; border-radius: 50%;
+        background: rgba(43, 34, 24, 0.55); color: #fff;
+        display: grid; place-items: center;
+        font-size: 28px; line-height: 1; padding-bottom: 4px;
+        transition: background 0.15s ease, opacity 0.15s ease;
+      }
+      .tap-zone:hover .arrow, .tap-zone:focus-visible .arrow { background: var(--gold); }
+      .tap-zone:disabled { cursor: default; }
+      .tap-zone:disabled .arrow { opacity: 0.25; }
+      .slide-count {
+        position: absolute; right: 12px; bottom: 12px; z-index: 2;
+        background: rgba(43, 34, 24, 0.6); color: #fff;
+        font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+        padding: 3px 11px; border-radius: 999px; pointer-events: none;
+      }
+      .photo-label {
+        text-align: center; margin: 12px 0 4px;
+        font-size: 14px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold);
+      }
+      .photo-note { text-align: center; margin: 0 0 16px; color: var(--ink-soft); font-size: 14px; }
+      .thumbs { display: flex; gap: 10px; justify-content: center; }
+      .thumb {
+        width: 74px; height: 74px; border-radius: 10px; overflow: hidden;
+        border: 2px solid var(--line); padding: 0; background: var(--surface-2);
+      }
+      .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+      .thumb.active { border-color: var(--gold); }
+      .thumb.soon {
+        display: grid; place-items: center; color: var(--ink-soft);
+        font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px;
+      }
+      .product-body { max-width: 640px; margin: 30px auto 0; }
+      .product-body p.desc { font-size: 18px; margin: 0 0 18px; }
+      .details { list-style: none; margin: 0 0 26px; padding: 0; display: grid; gap: 8px; }
+      .details li {
+        display: flex; gap: 10px; align-items: baseline;
+        border-bottom: 1px solid var(--line); padding-bottom: 8px; color: var(--ink-soft);
+      }
+      .details li b { color: var(--ink); font-weight: 600; min-width: 110px; }
+      .btn-gold {
+        display: inline-block; width: 100%;
+        background: var(--gold); color: #fff;
+        border: none; border-radius: 999px;
+        padding: 15px 28px; font-size: 17px; font-weight: 600; letter-spacing: 0.05em;
+        transition: background 0.15s ease;
+      }
+      .btn-gold:hover { background: var(--gold-bright); }
+      .btn-gold:disabled { background: var(--ink-soft); cursor: not-allowed; }
+      .claim-note { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 12px; }
+
+      /* ---------- Claim form ---------- */
+      .claim-summary {
+        display: flex; gap: 16px; align-items: center;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 14px 18px; margin: 14px 0 26px;
+      }
+      .claim-summary img { width: 64px; height: 64px; object-fit: cover; object-position: center 35%; border-radius: 8px; }
+      .claim-summary .nm { font-family: "Cormorant Garamond", Georgia, serif; font-size: 22px; font-weight: 700; line-height: 1.15; }
+      .claim-summary .pr { color: var(--ink-soft); font-size: 14px; }
+      form.claim { max-width: 560px; }
+      fieldset { border: none; margin: 0 0 22px; padding: 0; }
+      legend, .fld-label { font-weight: 600; font-size: 16px; margin-bottom: 10px; display: block; }
+      .choice-row { display: grid; gap: 12px; }
+      @media (min-width: 560px) { .choice-row { grid-template-columns: 1fr 1fr; } }
+      .choice {
+        display: block; text-align: left; width: 100%;
+        background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius);
+        padding: 16px 18px; color: inherit;
+      }
+      .choice.selected { border-color: var(--gold); background: var(--chip-bg); }
+      .choice .t { font-weight: 600; font-size: 17px; display: block; margin-bottom: 4px; }
+      .choice .d { color: var(--ink-soft); font-size: 14px; display: block; }
+      label.fld { display: block; margin-bottom: 16px; }
+      input[type="text"], textarea {
+        width: 100%; padding: 12px 14px; font: inherit; color: var(--ink);
+        background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px;
+      }
+      input[type="text"]:focus, textarea:focus { outline: 2px solid var(--gold-soft); border-color: var(--gold); }
+      .form-error { color: var(--error); font-weight: 500; margin: 0 0 14px; display: none; }
+      .claim-done {
+        display: none; max-width: 560px;
+        background: var(--surface); border: 1px solid var(--gold-soft); border-radius: var(--radius);
+        padding: 26px 28px; margin-top: 10px;
+      }
+      .claim-done h3 { font-family: "Cormorant Garamond", Georgia, serif; font-size: 28px; margin: 0 0 10px; }
+      .claim-done pre {
+        white-space: pre-wrap; font: inherit; font-size: 15px;
+        background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px;
+        padding: 14px 16px; margin: 14px 0;
+      }
+      .btn-outline {
+        background: none; border: 1.5px solid var(--gold); color: var(--gold);
+        border-radius: 999px; padding: 11px 24px; font-weight: 600; font-size: 15px;
+      }
+      .btn-outline:hover { background: var(--chip-bg); }
+      .copied { color: var(--gold); font-weight: 600; font-size: 14px; margin-left: 10px; }
+    </style>
+  </head>
+  <body>
+    <!-- ================= STOREFRONT DOOR (first screen) ================= -->
+    <div class="screen active" id="screen-door">
+      <div class="door-porch">
+        <div class="door-name-sign" aria-hidden="true">
+          <span class="sign-chain left"></span>
+          <span class="sign-chain right"></span>
+          <span class="door-name-board">Destinie's Craft Store</span>
+        </div>
+        <div class="door-row">
+          <button class="door-btn" id="door-open" type="button" aria-label="Open the door and enter Destinie's Craft Store">
+            <span class="door-stage" aria-hidden="true">
+            <span class="door-glow"></span>
+            <span class="door-leaf">
+              <span class="door-glass">
+                <span class="door-pane"></span>
+                <span class="door-pane"></span>
+                <span class="door-pane"></span>
+                <span class="door-pane"></span>
+                <span class="door-open-sign">OPEN</span>
+              </span>
+              <span class="door-mid">
+                <svg class="door-wreath" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="33" fill="none" stroke="#2f5d43" stroke-width="6"/><circle cx="50" cy="50" r="33" fill="none" stroke="#6fae7e" stroke-width="6" stroke-dasharray="7 10"/><circle cx="50" cy="17" r="3.4" fill="#c0574a"/><circle cx="76" cy="38" r="3.4" fill="#c0574a"/><circle cx="70" cy="72" r="3.4" fill="#c0574a"/><circle cx="30" cy="72" r="3.4" fill="#c0574a"/><circle cx="24" cy="38" r="3.4" fill="#c0574a"/><path d="M50 86 39 79v13Z" fill="#c9a24d"/><path d="M50 86l11-7v13Z" fill="#d9b36a"/><circle cx="50" cy="86" r="3.6" fill="#8a6a25"/></svg>
+                <span class="door-plate"></span>
+                <span class="door-knob"></span>
+              </span>
+              <span class="door-low">
+                <span class="door-tag-board">Nothing is perfect, but everything is handmade.</span>
+              </span>
+            </span>
+          </span>
+            <span class="door-prompt" aria-hidden="true">Tap the door to come in</span>
+          </button>
+          <div class="promo-banner">
+            <span class="promo-rail" aria-hidden="true"></span>
+            <div class="promo-body">
+              <span class="promo-bunting" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              <p class="promo-masthead">Destinie's Craft Store</p>
+              <p class="promo-head">Catch Us In Person!</p>
+              <p class="promo-name">First Thursday Fiesta</p>
+              <span class="sign-date-badge">THU · NOV 5</span>
+              <p class="promo-when">Thursday, November 5, 2026 · 10:00 AM – 3:00 PM</p>
+              <p class="promo-where">Margaret E. Morton Government Center<br />999 Broad St, Bridgeport, CT 06604</p>
+              <p class="promo-line">Come say hi and shop handmade in person!</p>
+              <p class="promo-host">Hosted by Small &amp; Minority Business Enterprise</p>
+            </div>
+            <span class="promo-base" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= STOREFRONT SCREEN ================= -->
+    <div class="screen walk-view" id="screen-walk-entrance">
+      <section class="hero">
+        <div class="hero-band">
+          <img class="hero-img" src="assets/img-001.jpg" alt="Inside Destinie's handmade boutique — deep green walls, wooden shelves of handmade goods, plants and warm pendant lights" fetchpriority="high" />
+          <div class="hero-shade" aria-hidden="true"></div>
+          <div class="hero-inner">
+            <h1>Destinie</h1>
+            <p class="tagline">Nothing is perfect, but everything is handmade.</p>
+          </div>
+        </div>
+        <div class="hero-btns">
+          <button class="btn-hero solid" id="btn-shop-hero" type="button">Shop All Items · <span id="shopall-count"></span></button>
+          <button class="btn-hero ghost" id="btn-browse-shelves" type="button">Browse the Shelves</button>
+        </div>
+      </section>
+
+      <main class="wrap">
+        <div class="scene" id="shelves">
+          <div class="store-layout">
+            <nav class="directory" aria-label="Store directory — shop by category">
+              <div class="dir-head">
+                <p class="dir-title">Handmade · Home Made · With Love</p>
+                <div class="dir-heart" aria-hidden="true">♡</div>
+              </div>
+              <button class="dir-row" type="button" data-open-cat="Bracelets">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="8.5" stroke-dasharray="0.1 3.3" stroke-width="3.2" /></svg></span>
+                <span class="dir-name">Bracelets</span>
+                <span class="dir-count" data-count-for="Bracelets"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Earrings">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.5a2.6 2.6 0 1 1-2.6 2.6" /><path d="M12 7.5v2" /><circle cx="12" cy="13.5" r="3.6" /><path d="M12 17.1v1.4" /><circle cx="12" cy="20.2" r="1.3" /></svg></span>
+                <span class="dir-name">Earrings</span>
+                <span class="dir-count" data-count-for="Earrings"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Keychains">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="4.2" /><path d="M11.2 11.2 20 20" /><path d="M16.4 16.4l2.6-2.6" /></svg></span>
+                <span class="dir-name">Keychains</span>
+                <span class="dir-count" data-count-for="Keychains"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Hair Accessories">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 12 4.5 7.5v9L12 12z" /><path d="M12 12l7.5-4.5v9L12 12z" /><circle cx="12" cy="12" r="1.8" /></svg></span>
+                <span class="dir-name">Hair Accessories</span>
+                <span class="dir-count" data-count-for="Hair Accessories"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Mugs &amp; Tumblers">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h11v8.5A3.5 3.5 0 0 1 12.5 18h-4A3.5 3.5 0 0 1 5 14.5z" /><path d="M16 9h1.4a2.8 2.8 0 0 1 0 5.6H16" /></svg></span>
+                <span class="dir-name">Mugs &amp; Tumblers</span>
+                <span class="dir-count" data-count-for="Mugs &amp; Tumblers"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Shirts &amp; Aprons">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M8.5 4 4 6.5 6 10l2-1v10h8V9l2 1 2-3.5L15.5 4a3.5 3.5 0 0 1-7 0z" /></svg></span>
+                <span class="dir-name">Shirts &amp; Aprons</span>
+                <span class="dir-count" data-count-for="Shirts &amp; Aprons"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Bookmarks">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 3h10v18l-5-3.6L7 21z" /></svg></span>
+                <span class="dir-name">Bookmarks</span>
+                <span class="dir-count" data-count-for="Bookmarks"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Domino Set">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M5 12h14" /><circle cx="9" cy="7.5" r="1.1" fill="currentColor" stroke="none" /><circle cx="15" cy="16.5" r="1.1" fill="currentColor" stroke="none" /><circle cx="9" cy="16.5" r="1.1" fill="currentColor" stroke="none" /></svg></span>
+                <span class="dir-name">Domino Set</span>
+                <span class="dir-count" data-count-for="Domino Set"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Fidget Spinners">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="6.5" r="3" /><circle cx="6.5" cy="15.5" r="3" /><circle cx="17.5" cy="15.5" r="3" /><circle cx="12" cy="12" r="1.8" /></svg></span>
+                <span class="dir-name">Fidget Spinners</span>
+                <span class="dir-count" data-count-for="Fidget Spinners"></span>
+              </button>
+              <button class="dir-row" type="button" data-open-cat="Photo Prints">
+                <span class="dir-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="1" /><rect x="6.8" y="7.8" width="10.4" height="8.4" rx="0.5" /><circle cx="10.2" cy="10.6" r="1.1" /><path d="M7.4 15.6l2.9-2.7 2.1 2 2.3-2.4 1.9 2.1" /></svg></span>
+                <span class="dir-name">Photo Prints</span>
+                <span class="dir-count" data-count-for="Photo Prints"></span>
+              </button>
+            </nav>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+
+    <!-- ================= WALK: JEWELRY AISLE ================= -->
+    <div class="screen walk-view" id="screen-walk-jewelry">
+      <main class="wrap">
+        <div class="walk-head">
+          <h2>Jewelry Aisle</h2>
+          <p>The heart of the shop — tap a display to step closer.</p>
+        </div>
+        <div class="scene walk-scene">
+          <div class="aisle-single">
+            <button class="shelf-unit aisle-unit" id="unit-earrings" type="button" aria-label="Step closer to the earrings pegboard — 12 pairs at $10 each">
+              <span class="mount" id="mount-earrings"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+            <button class="shelf-unit aisle-unit" id="unit-bracelets" type="button" aria-label="Step closer to the bracelet roll wall — 7 bracelets at $1 each">
+              <span class="mount" id="mount-bracelets"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+          </div>
+          <div class="aisle-all">
+            <button class="btn-gold" id="btn-jewelry-all" type="button">See all Jewelry &amp; Accessories · <span data-count-group="Earrings,Bracelets"></span></button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= WALK: GIFT SHELVES ================= -->
+    <div class="screen walk-view" id="screen-walk-gifts">
+      <main class="wrap">
+        <div class="walk-head">
+          <h2>Gift Shelves</h2>
+          <p>Little extras and gifts — tap the shelves to step closer.</p>
+        </div>
+        <div class="scene walk-scene">
+          <div class="gift-grid">
+            <button class="shelf-unit gift-wide" id="unit-spinner" type="button" aria-label="Step closer to the fidget spinner counter display — one handmade spinner, $5">
+              <span class="mount" id="mount-spinner"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+            <button class="shelf-unit" id="unit-keychains" type="button" aria-label="Step closer to the keychain pegboard — coming soon">
+              <span class="mount" id="mount-keychains"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+            <button class="shelf-unit" id="unit-hair" type="button" aria-label="Step closer to the hair accessories bow board — coming soon">
+              <span class="mount" id="mount-hair"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+            <button class="shelf-unit" id="unit-bookmarks" type="button" aria-label="Step closer to the bookmark stand — coming soon">
+              <span class="mount" id="mount-bookmarks"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+            <button class="shelf-unit" id="unit-domino" type="button" aria-label="Step closer to the domino display table — coming soon">
+              <span class="mount" id="mount-domino"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= WALK: PRINT WALL ================= -->
+    <!-- Empty gallery frames for now. When prints arrive, each print is
+         hung into a .pw-frame (its photo replaces the .pw-art mat) with a
+         small plaque under the frame showing title · size · price. -->
+    <div class="screen walk-view" id="screen-walk-printwall">
+      <main class="wrap">
+        <div class="walk-head">
+          <h2>Print Wall</h2>
+          <p>A gallery wall for Destinie's photo prints — the first ones are on their way.</p>
+        </div>
+        <div class="scene walk-scene">
+          <div class="pw-sign" aria-hidden="true">
+            <span class="sign-chain left"></span>
+            <span class="sign-chain right"></span>
+            <span class="pw-sign-board">The Print Wall</span>
+          </div>
+          <div class="pw-wall">
+            <div class="pw-frame wood pw-f1"><div class="pw-mat"><div class="pw-art"></div></div></div>
+            <div class="pw-frame gold pw-f2"><div class="pw-mat"><div class="pw-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 20C4 11 10 4 20 4c0 10-6 16-15 16" /><path d="M4 20c2-6 6-10 11-13" /></svg></div></div></div>
+            <div class="pw-frame wood pw-placard">
+              <div class="pw-mat">
+                <div class="pw-placard-text">
+                  <p class="pw-placard-title">Photo Prints</p>
+                  <p class="pw-placard-sub">Coming soon — prints are on their way.</p>
+                </div>
+              </div>
+            </div>
+            <div class="pw-frame gold pw-f4"><div class="pw-mat"><div class="pw-art"></div></div></div>
+            <div class="pw-frame wood pw-f5"><div class="pw-mat"><div class="pw-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 20C4 11 10 4 20 4c0 10-6 16-15 16" /><path d="M4 20c2-6 6-10 11-13" /></svg></div></div></div>
+          </div>
+          <div class="pw-actions">
+            <button class="btn-gold" id="btn-browse-prints" type="button">Browse Photo Prints</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= WALK: COMING SOON CORNER ================= -->
+    <div class="screen walk-view" id="screen-walk-soon">
+      <main class="wrap">
+        <div class="walk-head">
+          <h2>Coming Soon Corner</h2>
+          <p>Brand-new shelves, waiting for their first handmade pieces. Tap one to step closer.</p>
+        </div>
+        <div class="scene walk-scene">
+          <div class="corner-grid">
+            <button class="shelf-unit" id="unit-mugs" type="button" aria-label="Step closer to the mugs and tumblers shelf wall — coming soon">
+              <span class="mount" id="mount-mugs"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+            <button class="shelf-unit" id="unit-clothing" type="button" aria-label="Step closer to the shirts and aprons clothing rack — coming soon">
+              <span class="mount" id="mount-clothing"></span>
+              <span class="unit-shadow" aria-hidden="true"></span>
+              <span class="unit-go" aria-hidden="true">Step closer →</span>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= SHELF CLOSE-UP SCREEN ================= -->
+    <div class="screen" id="screen-closeup">
+      <main class="wrap">
+        <div class="product-top">
+          <h2 id="closeup-title"></h2>
+          <p class="grid-note" id="closeup-line"></p>
+        </div>
+        <div class="scene walk-scene closeup-scene">
+          <div class="closeup-stage" id="closeup-stage"></div>
+        </div>
+        <div class="closeup-actions">
+          <button class="btn-gold" id="btn-closeup-browse" type="button">Browse these items</button>
+          <button class="btn-outline closeup-back" id="btn-closeup-back" type="button">Step back</button>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= STORE MAP SCREEN ================= -->
+    <div class="screen" id="screen-map">
+      <main class="wrap">
+        <button class="back-btn" id="btn-map-back" type="button">← Back</button>
+        <div class="product-top">
+          <h2>Store Map</h2>
+          <p class="grid-note">Every corner of the shop — tap one to walk straight there.</p>
+        </div>
+        <div class="map-plan">
+          <button class="map-room" type="button" data-goto-walk="1">
+            <span class="map-here" data-here-for="1" hidden>You are here</span>
+            <span class="map-room-name">Jewelry Aisle</span>
+            <span class="map-room-sub">Earrings &amp; bracelets · 19 items</span>
+          </button>
+          <button class="map-room" type="button" data-goto-walk="2">
+            <span class="map-here" data-here-for="2" hidden>You are here</span>
+            <span class="map-room-name">Gift Shelves</span>
+            <span class="map-room-sub">Spinner, keychains, bookmarks &amp; more</span>
+          </button>
+          <button class="map-room" type="button" data-goto-walk="3">
+            <span class="map-here" data-here-for="3" hidden>You are here</span>
+            <span class="map-room-name">Print Wall</span>
+            <span class="map-room-sub">Framed photo prints · coming soon</span>
+          </button>
+          <button class="map-room" type="button" data-goto-walk="4">
+            <span class="map-here" data-here-for="4" hidden>You are here</span>
+            <span class="map-room-name">Coming Soon Corner</span>
+            <span class="map-room-sub">Mugs &amp; tumblers · clothing &amp; aprons</span>
+          </button>
+          <button class="map-room wide" type="button" data-goto-walk="0">
+            <span class="map-here" data-here-for="0" hidden>You are here</span>
+            <span class="map-room-name">Entrance</span>
+            <span class="map-room-sub">Start here · directory &amp; the shelves</span>
+          </button>
+          <button class="map-room door-room" type="button" id="map-door">
+            <span class="map-room-name">Front Door</span>
+            <span class="map-room-sub">Step back outside to the shop door — tap it to come in again</span>
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= CATEGORY / ALL ITEMS SCREEN ================= -->
+    <div class="screen" id="screen-grid">
+      <main class="wrap">
+        <button class="back-btn" id="btn-back-store" type="button">← Back to Store</button>
+        <div class="product-top">
+          <h2 id="grid-title">All items</h2>
+          <p class="grid-note" id="grid-note"></p>
+        </div>
+        <div class="empty-state" id="grid-empty" hidden>
+          <p class="big">Nothing here yet — new handmade pieces are on the way. Check back soon!</p>
+        </div>
+        <div id="grid-display" hidden></div>
+        <section class="grid" id="grid-list" aria-label="Items for sale"></section>
+      </main>
+    </div>
+
+    <!-- ================= PRODUCT SCREEN ================= -->
+    <div class="screen" id="screen-product">
+      <main class="wrap">
+        <button class="back-btn" id="btn-back-shop" type="button">← Back to all items</button>
+        <div class="product-top">
+          <h2 id="p-name"></h2>
+          <div class="product-meta">
+            <span class="only-one" id="p-only">Only 1 available</span>
+            <p class="price" id="p-price"></p>
+          </div>
+        </div>
+
+        <div class="gallery">
+          <div class="slider" id="p-slider">
+            <div class="slides" id="p-slides"></div>
+            <button class="tap-zone prev" id="p-prev" type="button" aria-label="Previous photo"><span class="arrow" aria-hidden="true">&#8249;</span></button>
+            <button class="tap-zone next" id="p-next" type="button" aria-label="Next photo"><span class="arrow" aria-hidden="true">&#8250;</span></button>
+            <span class="slide-count" id="p-count" aria-hidden="true"></span>
+          </div>
+          <p class="photo-label" id="p-photo-label"></p>
+          <p class="photo-note" id="p-photo-note"></p>
+          <div class="thumbs" id="p-thumbs"></div>
+        </div>
+
+        <div class="product-body">
+          <p class="desc" id="p-desc"></p>
+          <ul class="details">
+            <li><b>Made by</b><span id="p-made"></span></li>
+            <li id="p-hooks-row"><b id="p-hooks-label">Hooks</b><span id="p-hooks"></span></li>
+            <li><b>Quantity</b><span id="p-qty"></span></li>
+            <li><b>Fulfilment</b><span>Pickup at monthly events, or shipping at extra cost (calculated per item)</span></li>
+          </ul>
+          <button class="btn-gold" id="btn-to-claim" type="button">Claim this item</button>
+          <p class="claim-note">All sales are final — no refunds, no returns.</p>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= CLAIM SCREEN ================= -->
+    <div class="screen" id="screen-claim">
+      <main class="wrap">
+        <button class="back-btn" id="btn-back-product" type="button">← Back to item</button>
+        <div class="product-top">
+          <h2>Claim this item</h2>
+        </div>
+
+        <div class="claim-summary">
+          <img id="c-img" alt="" />
+          <div>
+            <div class="nm" id="c-name"></div>
+            <div class="pr" id="c-price"></div>
+          </div>
+        </div>
+
+        <form class="claim" id="claim-form" novalidate>
+          <fieldset>
+            <legend>How would you like to get it?</legend>
+            <div class="choice-row">
+              <button class="choice" type="button" data-choice="Pickup" aria-pressed="false">
+                <span class="t">Pickup at an event</span>
+                <span class="d">Pick up in person at a monthly craft event — Destinie will confirm the next event with you.</span>
+              </button>
+              <button class="choice" type="button" data-choice="Shipping" aria-pressed="false">
+                <span class="t">Shipping</span>
+                <span class="d">Extra cost, calculated per item depending on size and destination — confirmed before you pay.</span>
+              </button>
+            </div>
+          </fieldset>
+
+          <label class="fld">
+            <span class="fld-label">Your name</span>
+            <input type="text" id="f-name" autocomplete="name" placeholder="e.g. Jordan Smith" />
+          </label>
+          <label class="fld">
+            <span class="fld-label">How can Destinie reach you? (phone or email)</span>
+            <input type="text" id="f-contact" autocomplete="email" placeholder="Phone number or email address" />
+          </label>
+          <label class="fld">
+            <span class="fld-label">Anything else? (optional)</span>
+            <textarea id="f-note" rows="3" placeholder="Questions, or your town if you'd like a shipping quote"></textarea>
+          </label>
+
+          <p class="form-error" id="form-error"></p>
+          <button class="btn-gold" type="submit">Prepare my claim</button>
+          <p class="claim-note">This prepares your claim details — nothing is sent or charged automatically.</p>
+        </form>
+
+        <div class="claim-done" id="claim-done">
+          <h3>Your claim is ready</h3>
+          <p>Send these details to Destinie (for example by Facebook message) so she can confirm your claim. She'll confirm the item is still available, the price, and any shipping cost, then arrange payment with you directly.</p>
+          <pre id="claim-text"></pre>
+          <button class="btn-outline" type="button" id="btn-copy">Copy claim details</button>
+          <span class="copied" id="copied-msg"></span>
+          <p class="claim-note" style="text-align:left;">Remember: all sales are final — no refunds, no returns.</p>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= WALK AROUND BAR ================= -->
+    <nav class="walk-bar" id="walk-bar" aria-label="Walk around the store">
+      <button class="walk-btn" id="walk-back" type="button">‹ Back</button>
+      <div class="walk-mid">
+        <span class="walk-where" id="walk-where">Entrance · Stop 1 of 5</span>
+        <button class="walk-map-btn" id="walk-map" type="button">Store Map</button>
+      </div>
+      <button class="walk-btn" id="walk-next" type="button">Next ›</button>
+    </nav>
+
+    <script>
+      var ITEMS = [
+        {
+          id: "item-01",
+          category: "Earrings",
+          name: "White Square Bloom Earrings",
+          made: "Hand crocheted by Destinie",
+          hooks: "Gold-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Hand crocheted white earrings in a square bloom design with pretty openwork detail and a flower at the center. Lightweight statement pair on gold-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-002.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-003.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-004.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-02",
+          category: "Earrings",
+          name: "Mauve Doily Bloom Earrings",
+          made: "Hand crocheted by Destinie",
+          hooks: "Gold-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Hand crocheted round doily earrings in dusty mauve and white, finished with tiny gold beads at the center. Lacy, vintage-style pair on gold-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-005.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-006.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-007.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-03",
+          category: "Earrings",
+          name: "Red Petal Flower Earrings",
+          made: "Hand crocheted by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Hand crocheted flower earrings in a bold red with full, layered petals. A bright statement pair on silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-008.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-009.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-010.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-04",
+          category: "Earrings",
+          name: "White Halo Flower Earrings",
+          made: "Hand crocheted by Destinie",
+          hooks: "Gold-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Hand crocheted white flower earrings with an open halo center and scalloped petal edge. Soft, lacy pair on gold-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-011.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-012.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-013.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-05",
+          category: "Earrings",
+          name: "Pastel Pinwheel Flower Earrings",
+          made: "Hand crocheted by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Hand crocheted flower earrings in sweet pastel shades of blue, pink, yellow and lavender. Each petal blends colors differently, so this pair is truly one of a kind. Silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-014.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-015.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-016.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-06",
+          category: "Earrings",
+          name: "Green Glitter Drop Earrings",
+          made: "Handmade in resin by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Handmade resin drop earrings with three glitter ovals in a row — green, clear sparkle, and green again. Light-catching dangles on silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-017.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-018.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-019.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-07",
+          category: "Earrings",
+          name: "Kaleidoscope Bar Earrings",
+          made: "Sublimated wood by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          stock: 2,
+          price: 10,
+          desc: "Wooden sublimated bar earrings with a bright kaleidoscope pattern in pink, orange, yellow and teal. Bold, lightweight statement bars on silver-tone hooks.",
+          photos: [
+            { src: "assets/img-020.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-021.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-022.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-08",
+          category: "Earrings",
+          name: "Sunny Yellow Flower Earrings",
+          made: "Hand crocheted by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Hand crocheted flower earrings in a sunny yellow with an open center. Sweet, cheerful pair on silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-023.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-024.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-025.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-09",
+          category: "Earrings",
+          name: "Plaid Pop Disc Earrings",
+          made: "Sublimated seashell by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Seashell disc earrings with a sublimated plaid pop design — red and black buffalo plaid meets bright geometric color. Fun, bold rounds on silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-026.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-027.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-028.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-10",
+          category: "Earrings",
+          name: "Aqua Monstera Leaf Earrings",
+          made: "Handmade in resin by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Resin monstera leaf earrings in a dreamy aqua that fades to clear at the tips. Big tropical statement leaves on silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-029.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-030.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-031.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-11",
+          category: "Earrings",
+          name: "Blush Glitter Monstera Earrings",
+          made: "Handmade in resin by Destinie",
+          hooks: "Gold-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Resin monstera leaf earrings in blush pink with gold glitter swirled through. Tropical leaves with a sunset sparkle on gold-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-032.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-033.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-034.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-12",
+          category: "Earrings",
+          name: "Aqua Swirl Teardrop Earrings",
+          made: "Handmade in resin by Destinie",
+          hooks: "Silver-tone fishhook wires",
+          status: "available",
+          price: 10,
+          desc: "Resin teardrop earrings with aqua swirled into clear, like ocean water in a drop. Light, open-frame dangles on silver-tone hooks. Only 1 pair made.",
+          photos: [
+            { src: "assets/img-035.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual pair you will get." },
+            { src: "assets/img-036.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-037.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-13",
+          category: "Fidget Spinners",
+          name: "Green Glitter Flower Fidget Spinner",
+          made: "Handmade in resin by Destinie",
+          hooks: null,
+          status: "available",
+          price: 5,
+          desc: "Handmade resin fidget spinner shaped like a glitter flower — green sparkle in the middle fading to aqua at the petals, with a black center cap. A pretty little spin for busy hands.",
+          photos: [
+            { src: "assets/img-038.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-039.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-040.jpg", kind: "Lifestyle", label: "Lifestyle photo — styled scene", note: "Shown at rest on a study desk in a styled scene." }
+          ]
+        },
+        {
+          id: "item-14",
+          category: "Bracelets",
+          name: "\"Blessed\" Pink Word Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Letter beads spell BLESSED",
+          status: "available",
+          price: 1,
+          desc: "A stretch bracelet of pearl-style beads in magenta, pink and white, with letter beads that spell out BLESSED. Sweet, bright and full of faith.",
+          photos: [
+            { src: "assets/img-041.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-042.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-043.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-15",
+          category: "Bracelets",
+          name: "\"Joyful\" Pink Word Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Letter beads spell JOYFUL",
+          status: "available",
+          price: 1,
+          desc: "A stretch bracelet of pearl-style beads in magenta, pink and white, with letter beads that spell out JOYFUL. A little burst of happiness for your wrist.",
+          photos: [
+            { src: "assets/img-044.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-045.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-046.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-16",
+          category: "Bracelets",
+          name: "Pink Initial \"H\" Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Gold-tone initial bead: H",
+          status: "available",
+          price: 1,
+          desc: "Pearl-style beads in shades of pink, rose and white with a single gold initial bead — the letter H. A personal little gift, ready to wear.",
+          photos: [
+            { src: "assets/img-047.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-048.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-049.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-17",
+          category: "Bracelets",
+          name: "Plain Pink Beaded Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Pearl-style beads in mixed pinks",
+          status: "available",
+          price: 1,
+          desc: "A stretch bracelet of pearl-style beads in mixed shades of pink — magenta, rose, blush and pale pink. Simple, pretty and easy to stack with everything.",
+          photos: [
+            { src: "assets/img-050.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-051.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-052.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-18",
+          category: "Bracelets",
+          name: "Pink Initial \"F\" Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Gold-tone initial bead: F",
+          status: "available",
+          price: 1,
+          desc: "Pearl-style beads in shades of pink with a single gold initial bead — the letter F. A personal little gift, ready to wear.",
+          photos: [
+            { src: "assets/img-053.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-054.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-055.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-19",
+          category: "Bracelets",
+          name: "White & Pink Pearl Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Silver-tone spacer beads",
+          status: "available",
+          price: 1,
+          desc: "White pearl beads alternating with soft translucent pink beads and little silver spacer beads. Light, elegant and easy to wear with anything.",
+          photos: [
+            { src: "assets/img-056.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-057.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-058.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        },
+        {
+          id: "item-20",
+          category: "Bracelets",
+          name: "Blue Initial \"K\" Bracelet",
+          made: "Handmade beaded bracelet by Destinie",
+          hooks: null,
+          detail: "Gold-tone initial bead: K",
+          status: "available",
+          price: 1,
+          desc: "Pearl-style beads in aqua and deep blue with a single gold initial bead — the letter K. Cool, calm colours with a personal touch.",
+          photos: [
+            { src: "assets/img-059.jpg", kind: "Plain", label: "The exact item you'll receive", note: "Plain photo — this is the actual item you will get." },
+            { src: "assets/img-060.jpg", kind: "Boutique Display", label: "Styled display photo", note: "Shown styled in a boutique display." },
+            { src: "assets/img-061.jpg", kind: "Lifestyle", label: "Lifestyle photo — mannequin, styled scene", note: "Shown on a mannequin in a styled scene." }
+          ]
+        }
+      ];
+
+      var currentItem = null;
+      var currentPhoto = 0;
+      var claimChoice = "";
+
+      var WALK_IDS = ["screen-walk-entrance", "screen-walk-jewelry", "screen-walk-gifts", "screen-walk-printwall", "screen-walk-soon"];
+
+      function showScreen(id) {
+        var screens = document.querySelectorAll(".screen");
+        for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+        document.getElementById(id).classList.add("active");
+        var bar = document.getElementById("walk-bar");
+        if (bar) bar.classList.toggle("on", WALK_IDS.indexOf(id) >= 0);
+        window.scrollTo(0, 0);
+      }
+
+      function availText(item) {
+        var n = item.stock || 1;
+        return n > 1 ? n + " available" : "Only 1 available";
+      }
+
+      /* ---------- Category / all-items grid ---------- */
+      var currentGridFilter = null;
+      var currentGridCats = null;
+      var ENTRANCE_RET = { id: "screen-walk-entrance", label: "Entrance" };
+      var CLOSEUP_RET = { id: "screen-closeup", label: "the shelf" };
+      var gridReturn = ENTRANCE_RET;
+      var productReturn = "grid";
+      var THEMED_DISPLAY_CATS = ["Earrings", "Bracelets", "Fidget Spinners", "Keychains", "Hair Accessories", "Bookmarks", "Domino Set", "Mugs & Tumblers", "Shirts & Aprons"];
+
+      function gridItems() {
+        return ITEMS.filter(function (item) {
+          return !currentGridCats || currentGridCats.indexOf(item.category) >= 0;
+        });
+      }
+
+      function renderGrid() {
+        var grid = document.getElementById("grid-list");
+        grid.innerHTML = "";
+        gridItems().forEach(function (item) {
+          var sold = item.status === "sold";
+          var card = document.createElement("button");
+          card.type = "button";
+          card.className = "card";
+          card.setAttribute("aria-label", "View " + item.name);
+          card.innerHTML =
+            '<div class="photo"><img src="' + item.photos[0].src + '" alt="' + item.name + ' — plain photo of the exact item" loading="lazy" />' +
+            (sold ? '<div class="badge-sold">SOLD</div>' : "") + "</div>" +
+            '<div class="body">' +
+            "<h2>" + item.name + "</h2>" +
+            '<span class="only-one' + (sold ? " gone" : "") + '">' + (sold ? "Sold" : availText(item)) + "</span>" +
+            '<p class="price">$' + item.price + "</p>" +
+            '<span class="view">View item →</span>' +
+            "</div>";
+          card.addEventListener("click", function () { productReturn = "grid"; openProduct(item.id); });
+          grid.appendChild(card);
+        });
+      }
+
+      function openGrid(title, cats, ret) {
+        currentGridFilter = title || null;
+        currentGridCats = cats || null;
+        if (ret) gridReturn = ret;
+        document.getElementById("btn-back-store").textContent = "← Back to " + gridReturn.label;
+        var n = gridItems().length;
+        document.getElementById("grid-title").textContent = title || "All items";
+        var empty = document.getElementById("grid-empty");
+        if (n === 0) {
+          document.getElementById("grid-note").textContent = "Coming soon";
+          var EMPTY_LINES = {
+            "Photo Prints": "Nothing here yet — the first photo prints are on their way to the Print Wall. Check back soon!",
+            "Keychains": "The pegboard is hung and its hooks are ready. Nothing here yet — new handmade pieces are on the way. Check back soon!",
+            "Hair Accessories": "The bow board is up, pretty and waiting. Nothing here yet — new handmade pieces are on the way. Check back soon!",
+            "Bookmarks": "The bookmark stand is on the counter, its slots empty for now. Nothing here yet — new handmade pieces are on the way. Check back soon!",
+            "Domino Set": "The display table is set, ready for the first domino sets. Nothing here yet — new handmade pieces are on the way. Check back soon!",
+            "Mugs & Tumblers": "The shelves are built, warm and empty for now. Nothing here yet — new handmade pieces are on the way. Check back soon!",
+            "Shirts & Aprons": "The rack is ready, with empty hangers waiting. Nothing here yet — new handmade pieces are on the way. Check back soon!"
+          };
+          empty.querySelector(".big").textContent =
+            cats && cats.length === 1 && EMPTY_LINES[cats[0]]
+              ? EMPTY_LINES[cats[0]]
+              : "Nothing here yet — new handmade pieces are on the way. Check back soon!";
+          empty.hidden = false;
+        } else {
+          document.getElementById("grid-note").textContent =
+            n + (n === 1 ? " item" : " items") + " · handmade by Destinie";
+          empty.hidden = true;
+        }
+        var dispEl = document.getElementById("grid-display");
+        var listEl = document.getElementById("grid-list");
+        var dispCat = cats && cats.length === 1 && THEMED_DISPLAY_CATS.indexOf(cats[0]) >= 0 ? cats[0] : null;
+        if (dispCat) {
+          dispEl.innerHTML = buildDisplay(dispCat, "shop");
+          dispEl.hidden = false;
+          listEl.style.display = "none";
+          wireDisplayItems(dispEl);
+        } else {
+          dispEl.hidden = true;
+          dispEl.innerHTML = "";
+          listEl.style.display = "";
+          renderGrid();
+        }
+        showScreen("screen-grid");
+      }
+
+      /* ---------- Product screen ---------- */
+      function setPhoto(idx) {
+        var count = currentItem.photos.length;
+        if (idx < 0) idx = 0;
+        if (idx > count - 1) idx = count - 1;
+        currentPhoto = idx;
+        var photo = currentItem.photos[idx];
+        document.getElementById("p-slides").style.transform = "translateX(" + (-idx * 100) + "%)";
+        document.getElementById("p-photo-label").textContent = photo.kind + " — " + photo.label;
+        document.getElementById("p-photo-note").textContent = photo.note;
+        document.getElementById("p-count").textContent = (idx + 1) + " / " + count;
+        document.getElementById("p-prev").disabled = idx === 0;
+        document.getElementById("p-next").disabled = idx === count - 1;
+        var thumbs = document.querySelectorAll("#p-thumbs .thumb");
+        for (var i = 0; i < thumbs.length; i++) {
+          thumbs[i].classList.toggle("active", i === idx);
+        }
+      }
+
+      function stepPhoto(delta) { setPhoto(currentPhoto + delta); }
+
+      function openProduct(id) {
+        for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === id) currentItem = ITEMS[i];
+        document.getElementById("btn-back-shop").textContent =
+          productReturn === "entrance" ? "← Back to Entrance" : "← Back to " + (currentGridFilter || "all items");
+        var sold = currentItem.status === "sold";
+        document.getElementById("p-name").textContent = currentItem.name;
+        var only = document.getElementById("p-only");
+        only.textContent = sold ? "Sold" : availText(currentItem);
+        only.classList.toggle("gone", sold);
+        document.getElementById("p-desc").textContent = currentItem.desc;
+        document.getElementById("p-made").textContent = currentItem.made;
+        var isEarrings = currentItem.category === "Earrings";
+        document.getElementById("p-qty").textContent = (currentItem.stock || 1) > 1 ? currentItem.stock + (isEarrings ? " pairs available" : " available") : "1 only — one of a kind, no restocks";
+        var hooksRow = document.getElementById("p-hooks-row");
+        if (currentItem.hooks) {
+          hooksRow.style.display = "";
+          document.getElementById("p-hooks-label").textContent = "Hooks";
+          document.getElementById("p-hooks").textContent = currentItem.hooks;
+        } else if (currentItem.detail) {
+          hooksRow.style.display = "";
+          document.getElementById("p-hooks-label").textContent = "Details";
+          document.getElementById("p-hooks").textContent = currentItem.detail;
+        } else {
+          hooksRow.style.display = "none";
+        }
+        document.getElementById("p-price").textContent = "$" + currentItem.price;
+
+        var slidesEl = document.getElementById("p-slides");
+        slidesEl.innerHTML = "";
+        currentItem.photos.forEach(function (photo) {
+          var s = document.createElement("div");
+          s.className = "slide";
+          if (photo.src) {
+            s.innerHTML = '<img src="' + photo.src + '" alt="' + currentItem.name + " — " + photo.kind + ' photo" draggable="false" />';
+          } else {
+            s.innerHTML = '<div class="soon-tile">Lifestyle photo coming soon</div>';
+          }
+          slidesEl.appendChild(s);
+        });
+
+        var thumbsEl = document.getElementById("p-thumbs");
+        thumbsEl.innerHTML = "";
+        currentItem.photos.forEach(function (photo, idx) {
+          var t = document.createElement("button");
+          t.type = "button";
+          t.className = "thumb" + (photo.src ? "" : " soon");
+          t.setAttribute("aria-label", "Show " + photo.kind + " photo");
+          if (photo.src) {
+            t.innerHTML = '<img src="' + photo.src + '" alt="" />';
+          } else {
+            t.textContent = "Coming soon";
+          }
+          t.addEventListener("click", function () { setPhoto(idx); });
+          thumbsEl.appendChild(t);
+        });
+        setPhoto(0);
+
+        var claimBtn = document.getElementById("btn-to-claim");
+        claimBtn.disabled = sold;
+        claimBtn.textContent = sold ? "Sold — this one is gone" : "Claim this item";
+        showScreen("screen-product");
+      }
+
+      /* ---------- Claim screen ---------- */
+      function openClaim() {
+        document.getElementById("c-img").src = currentItem.photos[0].src;
+        document.getElementById("c-img").alt = currentItem.name + " — plain photo";
+        document.getElementById("c-name").textContent = currentItem.name;
+        document.getElementById("c-price").textContent = "$" + currentItem.price + " · " + availText(currentItem);
+        claimChoice = "";
+        var choices = document.querySelectorAll(".choice");
+        for (var i = 0; i < choices.length; i++) {
+          choices[i].classList.remove("selected");
+          choices[i].setAttribute("aria-pressed", "false");
+        }
+        document.getElementById("form-error").style.display = "none";
+        document.getElementById("claim-done").style.display = "none";
+        document.getElementById("claim-form").style.display = "block";
+        document.getElementById("copied-msg").textContent = "";
+        showScreen("screen-claim");
+      }
+
+      document.querySelectorAll(".choice").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          claimChoice = btn.getAttribute("data-choice");
+          document.querySelectorAll(".choice").forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle("selected", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+        });
+      });
+
+      document.getElementById("claim-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var name = document.getElementById("f-name").value.trim();
+        var contact = document.getElementById("f-contact").value.trim();
+        var note = document.getElementById("f-note").value.trim();
+        var err = document.getElementById("form-error");
+        var problems = [];
+        if (!claimChoice) problems.push("choose Pickup or Shipping");
+        if (!name) problems.push("add your name");
+        if (!contact) problems.push("add a phone number or email");
+        if (problems.length) {
+          err.textContent = "Almost there — please " + problems.join(", ") + ".";
+          err.style.display = "block";
+          return;
+        }
+        err.style.display = "none";
+        var lines = [
+          "Claim for Destinie's Craft Store",
+          "Item: " + currentItem.name,
+          "Price: $" + currentItem.price,
+          "Fulfilment: " + claimChoice + (claimChoice === "Pickup" ? " at a monthly event" : " (shipping cost to be confirmed)"),
+          "Name: " + name,
+          "Contact: " + contact
+        ];
+        if (note) lines.push("Note: " + note);
+        document.getElementById("claim-text").textContent = lines.join("\n");
+        document.getElementById("claim-form").style.display = "none";
+        var done = document.getElementById("claim-done");
+        done.style.display = "block";
+        done.scrollIntoView({ block: "start" });
+      });
+
+      document.getElementById("btn-copy").addEventListener("click", function () {
+        var text = document.getElementById("claim-text").textContent;
+        var msg = document.getElementById("copied-msg");
+        function ok() { msg.textContent = "Copied ✓"; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok, function () { msg.textContent = "Select the text above and copy it."; });
+        } else {
+          msg.textContent = "Select the text above and copy it.";
+        }
+      });
+
+      document.getElementById("btn-back-shop").addEventListener("click", function () {
+        showScreen(productReturn === "entrance" ? "screen-walk-entrance" : "screen-grid");
+      });
+      document.getElementById("btn-back-product").addEventListener("click", function () { showScreen("screen-product"); });
+      document.getElementById("btn-to-claim").addEventListener("click", openClaim);
+
+      /* ---------- Photo slider: arrows, tap zones, swipe, keys ---------- */
+      var swipeX = null;
+      var suppressTap = false;
+      var sliderEl = document.getElementById("p-slider");
+      document.getElementById("p-prev").addEventListener("click", function () { if (!suppressTap) stepPhoto(-1); });
+      document.getElementById("p-next").addEventListener("click", function () { if (!suppressTap) stepPhoto(1); });
+      sliderEl.addEventListener("pointerdown", function (e) { swipeX = e.clientX; });
+      sliderEl.addEventListener("pointerup", function (e) {
+        if (swipeX === null) return;
+        var dx = e.clientX - swipeX;
+        swipeX = null;
+        if (Math.abs(dx) >= 40) {
+          suppressTap = true;
+          stepPhoto(dx < 0 ? 1 : -1);
+          setTimeout(function () { suppressTap = false; }, 80);
+        }
+      });
+      sliderEl.addEventListener("pointercancel", function () { swipeX = null; });
+      document.addEventListener("keydown", function (e) {
+        if (!document.getElementById("screen-product").classList.contains("active")) return;
+        if (e.key === "ArrowLeft") stepPhoto(-1);
+        if (e.key === "ArrowRight") stepPhoto(1);
+      });
+
+      /* ---------- Storefront wiring & counts ---------- */
+      var CATEGORIES = ["Bracelets", "Earrings", "Keychains", "Hair Accessories", "Mugs & Tumblers", "Shirts & Aprons", "Bookmarks", "Domino Set", "Fidget Spinners", "Photo Prints"];
+
+      function setCounts() {
+        var counts = {};
+        CATEGORIES.forEach(function (c) { counts[c] = 0; });
+        ITEMS.forEach(function (item) {
+          counts[item.category] = (counts[item.category] || 0) + 1;
+        });
+        document.querySelectorAll("[data-count-for]").forEach(function (el) {
+          var n = counts[el.getAttribute("data-count-for")] || 0;
+          el.textContent = n === 0 ? "Coming soon" : n + (n === 1 ? " item" : " items");
+        });
+        document.querySelectorAll("[data-count-group]").forEach(function (el) {
+          var cats = el.getAttribute("data-count-group").split(",");
+          var n = 0;
+          cats.forEach(function (c) { n += counts[c] || 0; });
+          el.textContent = n + (n === 1 ? " item" : " items");
+        });
+        document.getElementById("shopall-count").textContent = ITEMS.length + " items";
+      }
+
+      /* ---------- Walk Around navigation ---------- */
+      var WALK = [
+        { id: "screen-walk-entrance", name: "Entrance" },
+        { id: "screen-walk-jewelry", name: "Jewelry Aisle" },
+        { id: "screen-walk-gifts", name: "Gift Shelves" },
+        { id: "screen-walk-printwall", name: "Print Wall" },
+        { id: "screen-walk-soon", name: "Coming Soon Corner" }
+      ];
+      var walkIndex = 0;
+      var mapFrom = 0;
+
+      function updateWalkBar() {
+        document.getElementById("walk-where").textContent =
+          WALK[walkIndex].name + " · Stop " + (walkIndex + 1) + " of " + WALK.length;
+        document.getElementById("walk-back").classList.toggle("gone", walkIndex === 0);
+        document.getElementById("walk-next").textContent =
+          walkIndex === WALK.length - 1 ? "Back to Entrance" : "Next ›";
+      }
+
+      function goWalk(i) {
+        if (i < 0) i = 0;
+        if (i > WALK.length - 1) i = WALK.length - 1;
+        walkIndex = i;
+        showScreen(WALK[i].id);
+        updateWalkBar();
+      }
+
+      document.getElementById("walk-back").addEventListener("click", function () { goWalk(walkIndex - 1); });
+      document.getElementById("walk-next").addEventListener("click", function () {
+        goWalk(walkIndex === WALK.length - 1 ? 0 : walkIndex + 1);
+      });
+      document.getElementById("walk-map").addEventListener("click", function () {
+        mapFrom = walkIndex;
+        document.querySelectorAll("[data-here-for]").forEach(function (badge) {
+          badge.hidden = parseInt(badge.getAttribute("data-here-for"), 10) !== mapFrom;
+        });
+        showScreen("screen-map");
+      });
+      document.getElementById("btn-map-back").addEventListener("click", function () { goWalk(mapFrom); });
+      document.querySelectorAll("[data-goto-walk]").forEach(function (room) {
+        room.addEventListener("click", function () {
+          goWalk(parseInt(room.getAttribute("data-goto-walk"), 10));
+        });
+      });
+      /* ---------- Storefront door ---------- */
+      var doorBtn = document.getElementById("door-open");
+      var doorOpening = false;
+
+      function showDoor() {
+        doorOpening = false;
+        doorBtn.classList.remove("opening");
+        doorBtn.disabled = false;
+        showScreen("screen-door");
+      }
+
+      doorBtn.addEventListener("click", function () {
+        if (doorOpening) return;
+        doorOpening = true;
+        doorBtn.disabled = true;
+        var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduce) { goWalk(0); return; }
+        doorBtn.classList.add("opening");
+        setTimeout(function () { goWalk(0); }, 880);
+      });
+      document.getElementById("map-door").addEventListener("click", showDoor);
+
+      /* ---------- Themed jewelry displays: earrings pegboard & bracelet roll wall ---------- */
+      var FEATURED_IDS = { "item-03": true, "item-10": true, "item-13": true, "item-14": true };
+
+      function shortName(item) {
+        return item.name.replace(/ (Earrings|Bracelet)$/, "");
+      }
+
+      function displayTagHTML(item) {
+        var sold = item.status === "sold";
+        return '<span class="dtag"><span class="dname">' + shortName(item) + '</span>' +
+          '<span class="dprice">' + (sold ? "Sold" : "$" + item.price) + "</span></span>";
+      }
+
+      function attrName(item) {
+        return item.name.replace(/"/g, "&quot;");
+      }
+
+      function pegCardHTML(item, interactive) {
+        var inner =
+          '<span class="peg-hook" aria-hidden="true"></span>' +
+          (FEATURED_IDS[item.id] ? '<span class="feat-tag">Featured</span>' : "") +
+          '<img src="' + item.photos[0].src + '" alt="" loading="lazy" />' +
+          displayTagHTML(item);
+        if (interactive) {
+          return '<button type="button" class="peg-card" data-open-item="' + item.id + '" aria-label="View ' + attrName(item) + '">' + inner + "</button>";
+        }
+        return '<span class="peg-card">' + inner + "</span>";
+      }
+
+      function rollItemHTML(item, interactive) {
+        var inner =
+          (FEATURED_IDS[item.id] ? '<span class="feat-tag">Featured</span>' : "") +
+          '<span class="roll-photo"><img src="' + item.photos[0].src + '" alt="" loading="lazy" /></span>' +
+          displayTagHTML(item);
+        if (interactive) {
+          return '<button type="button" class="roll-item" data-open-item="' + item.id + '" aria-label="View ' + attrName(item) + '">' + inner + "</button>";
+        }
+        return '<span class="roll-item">' + inner + "</span>";
+      }
+
+      function chalkSignHTML(text) {
+        return '<span class="chalk-sign">' + text + "</span>";
+      }
+
+      function spinItemHTML(item, interactive) {
+        var inner =
+          (FEATURED_IDS[item.id] ? '<span class="feat-tag">Featured</span>' : "") +
+          '<span class="spin-photo"><img src="' + item.photos[0].src + '" alt="" loading="lazy" /></span>' +
+          displayTagHTML(item);
+        if (interactive) {
+          return '<button type="button" class="spin-item" data-open-item="' + item.id + '" aria-label="View ' + attrName(item) + '">' + inner + "</button>";
+        }
+        return '<span class="spin-item">' + inner + "</span>";
+      }
+
+      /* Decor only — plants & gift boxes dress the empty displays; never merchandise. */
+      var PLANT_SVG = '<svg class="prop prop-plant" viewBox="0 0 52 66" aria-hidden="true"><path d="M26 36C20 28 12 24 4 24c2 8 10 13 22 12Z" fill="#2f5d43"/><path d="M26 36c6-8 14-12 22-12-2 8-10 13-22 12Z" fill="#3c7a57"/><path d="M26 36c-4-10-3-20 0-28 3 8 4 18 0 28Z" fill="#57a773"/><rect x="13" y="36" width="26" height="6" rx="2" fill="#8a4f27"/><path d="M15 42h22l-2.6 20a4 4 0 0 1-4 3.4H21.6a4 4 0 0 1-4-3.4Z" fill="#b06a35"/></svg>';
+      var GIFT_SVG = '<svg class="prop prop-gift" viewBox="0 0 56 52" aria-hidden="true"><circle cx="20" cy="8" r="5" fill="none" stroke="#d9b36a" stroke-width="3"/><circle cx="36" cy="8" r="5" fill="none" stroke="#d9b36a" stroke-width="3"/><rect x="8" y="14" width="40" height="8" rx="2" fill="#c9a24d"/><rect x="11" y="22" width="34" height="26" rx="2" fill="#1f4d36"/><rect x="25" y="14" width="6" height="34" fill="#d9b36a"/></svg>';
+      var HANGER_SVG = '<svg class="hanger" viewBox="0 0 24 24" fill="none" stroke="#7d838a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8.4V6.6a2.3 2.3 0 1 1 2.3-2.3"/><path d="M12 8.4 3.5 17h17Z"/></svg>';
+
+      /* Themed displays for the not-yet-stocked categories: pretty fixtures,
+         a Coming Soon chalkboard sign, and no merchandise and no prices. */
+      function emptyDisplayHTML(cat, ctx) {
+        var sign = chalkSignHTML(cat + " · Coming Soon");
+        var root = "jdisp gdisp ctx-" + ctx;
+        var i, built;
+        if (cat === "Keychains") {
+          built = "";
+          for (i = 0; i < 8; i++) built += '<span class="empty-hook" aria-hidden="true"></span>';
+          return '<span class="' + root + ' pegboard keydisp"><span class="jdisp-frame"><span class="peg-surface">' +
+            sign + '<span class="hook-grid">' + built + "</span></span></span></span>";
+        }
+        if (cat === "Hair Accessories") {
+          return '<span class="' + root + ' hairdisp"><span class="jdisp-frame"><span class="hair-scene">' +
+            sign + '<span class="hair-ribbon" aria-hidden="true"></span>' +
+            '<span class="hair-shelf">' + PLANT_SVG + '</span><span class="hair-shelf tight"></span>' +
+            "</span></span></span>";
+        }
+        if (cat === "Bookmarks") {
+          built = "";
+          for (i = 0; i < 5; i++) built += '<span class="slot" aria-hidden="true"></span>';
+          return '<span class="' + root + ' bookdisp"><span class="jdisp-frame"><span class="book-stand">' +
+            sign + '<span class="slot-row">' + built + '</span><span class="book-base" aria-hidden="true"></span>' +
+            "</span></span></span>";
+        }
+        if (cat === "Domino Set") {
+          return '<span class="' + root + ' domdisp"><span class="jdisp-frame">' +
+            sign + '<span class="dom-table"><span class="dom-top"><span class="dom-mat"></span></span>' +
+            '<span class="dom-legs"><span class="dom-leg"></span><span class="dom-leg"></span></span></span>' +
+            "</span></span>";
+        }
+        if (cat === "Mugs & Tumblers") {
+          return '<span class="' + root + ' mugdisp"><span class="jdisp-frame"><span class="mug-wall">' +
+            sign +
+            '<span class="mug-row">' + PLANT_SVG + '<span class="mug-plank"></span></span>' +
+            '<span class="mug-row">' + GIFT_SVG + '<span class="mug-plank"></span></span>' +
+            '<span class="mug-row"><span class="mug-plank"></span></span>' +
+            "</span></span></span>";
+        }
+        if (cat === "Shirts & Aprons") {
+          built = "";
+          for (i = 0; i < 5; i++) built += HANGER_SVG;
+          return '<span class="' + root + ' rackdisp"><span class="jdisp-frame"><span class="rack-scene">' +
+            sign + '<span class="rack-stand"><span class="rack-post left"></span><span class="rack-post right"></span>' +
+            '<span class="rack-bar"></span><span class="rack-hangers">' + built + "</span></span>" +
+            '<span class="rack-floor" aria-hidden="true"></span>' +
+            "</span></span></span>";
+        }
+        return "";
+      }
+
+      function buildDisplay(cat, ctx) {
+        var items = ITEMS.filter(function (it) { return it.category === cat; });
+        var interactive = ctx === "shop";
+        var i, html;
+        if (cat === "Earrings") {
+          html = "";
+          for (i = 0; i < items.length; i++) html += pegCardHTML(items[i], interactive);
+          return '<span class="jdisp pegboard ctx-' + ctx + '"><span class="jdisp-frame"><span class="peg-surface">' +
+            chalkSignHTML("Earrings · $10") +
+            '<span class="peg-grid">' + html + "</span></span></span></span>";
+        }
+        if (cat === "Bracelets") {
+          var sizes = [3, 2, 2];
+          var idx = 0, row = 0, rows = "";
+          while (idx < items.length) {
+            var take = sizes[row % sizes.length];
+            var cells = "";
+            for (var k = 0; k < take && idx < items.length; k++, idx++) cells += rollItemHTML(items[idx], interactive);
+            rows += '<span class="roll-row"><span class="roll-items">' + cells + '</span><span class="roll-bar" aria-hidden="true"></span></span>';
+            row++;
+          }
+          return '<span class="jdisp rollwall ctx-' + ctx + '"><span class="jdisp-frame">' +
+            chalkSignHTML("Bracelets · $1") + rows + "</span></span>";
+        }
+        if (cat === "Fidget Spinners") {
+          html = "";
+          for (i = 0; i < items.length; i++) html += spinItemHTML(items[i], interactive);
+          return '<span class="jdisp spindisp gdisp ctx-' + ctx + '"><span class="jdisp-frame">' +
+            chalkSignHTML("Fidget Spinners · $5") +
+            '<span class="spin-counter">' + html + PLANT_SVG + '</span>' +
+            '<span class="spin-shelf" aria-hidden="true"></span>' +
+            "</span></span>";
+        }
+        return emptyDisplayHTML(cat, ctx);
+      }
+
+      function wireDisplayItems(root) {
+        root.querySelectorAll("[data-open-item]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            productReturn = "grid";
+            openProduct(btn.getAttribute("data-open-item"));
+          });
+        });
+      }
+
+      /* ---------- Shelf close-up (step closer) ---------- */
+      var CLOSEUPS = {
+        earrings: {
+          build: "Earrings",
+          title: "Earrings",
+          line: "You're up close at the pegboard — twelve handmade pairs of earrings, $10 a pair."
+        },
+        bracelets: {
+          build: "Bracelets",
+          title: "Bracelets",
+          line: "The bracelet rolls up close — every handmade bracelet on these rolls is just $1."
+        },
+        spinner: {
+          build: "Fidget Spinners",
+          title: "Fidget Spinners",
+          line: "The counter display up close — Destinie's handmade resin fidget spinner on its stand, $5."
+        },
+        keychains: {
+          build: "Keychains",
+          title: "Keychains",
+          line: "The keychain pegboard up close — the hooks are empty for now; keychains are on their way."
+        },
+        hair: {
+          build: "Hair Accessories",
+          title: "Hair Accessories",
+          line: "The bow board up close — pretty and empty for now; hair accessories are on their way."
+        },
+        bookmarks: {
+          build: "Bookmarks",
+          title: "Bookmarks",
+          line: "The bookmark stand up close — every slot empty for now; bookmarks are on their way."
+        },
+        domino: {
+          build: "Domino Set",
+          title: "Domino Set",
+          line: "The display table up close — domino sets will be set out here soon."
+        },
+        mugs: {
+          build: "Mugs & Tumblers",
+          title: "Mugs & Tumblers",
+          line: "The shelf wall up close — warm, empty shelves; mugs and tumblers are on their way."
+        },
+        clothing: {
+          build: "Shirts & Aprons",
+          title: "Shirts & Aprons",
+          line: "The clothing rack up close — empty hangers for now; shirts and aprons are on their way."
+        }
+      };
+      var closeupKey = null;
+      var closeupFrom = 0;
+
+      function openCloseup(key) {
+        var cfg = CLOSEUPS[key];
+        if (!cfg) return;
+        closeupKey = key;
+        closeupFrom = walkIndex;
+        document.getElementById("closeup-title").textContent = cfg.title;
+        document.getElementById("closeup-line").textContent = cfg.line;
+        var stage = document.getElementById("closeup-stage");
+        stage.innerHTML = "";
+        var clone = document.createElement("div");
+        clone.className = "shelf-unit";
+        clone.setAttribute("aria-hidden", "true");
+        clone.innerHTML = buildDisplay(cfg.build, "close");
+        stage.appendChild(clone);
+        showScreen("screen-closeup");
+      }
+
+      document.getElementById("btn-closeup-browse").addEventListener("click", function () {
+        var cfg = CLOSEUPS[closeupKey];
+        if (cfg) openGrid(cfg.build, [cfg.build], CLOSEUP_RET);
+      });
+      document.getElementById("btn-closeup-back").addEventListener("click", function () { goWalk(closeupFrom); });
+
+      /* ---------- Opening categories & shelves ---------- */
+      document.querySelectorAll("[data-open-cat]:not(.shelf-unit)").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          openGrid(btn.getAttribute("data-open-cat"), [btn.getAttribute("data-open-cat")], ENTRANCE_RET);
+        });
+      });
+      document.getElementById("unit-earrings").addEventListener("click", function () { openCloseup("earrings"); });
+      document.getElementById("unit-bracelets").addEventListener("click", function () { openCloseup("bracelets"); });
+      document.getElementById("btn-jewelry-all").addEventListener("click", function () {
+        openGrid("Jewelry & Accessories", ["Earrings", "Bracelets"], { id: "screen-walk-jewelry", label: "Jewelry Aisle" });
+      });
+      document.getElementById("unit-mugs").addEventListener("click", function () { openCloseup("mugs"); });
+      document.getElementById("unit-clothing").addEventListener("click", function () { openCloseup("clothing"); });
+      document.getElementById("unit-spinner").addEventListener("click", function () { openCloseup("spinner"); });
+      document.getElementById("unit-keychains").addEventListener("click", function () { openCloseup("keychains"); });
+      document.getElementById("unit-hair").addEventListener("click", function () { openCloseup("hair"); });
+      document.getElementById("unit-bookmarks").addEventListener("click", function () { openCloseup("bookmarks"); });
+      document.getElementById("unit-domino").addEventListener("click", function () { openCloseup("domino"); });
+      document.getElementById("btn-back-store").addEventListener("click", function () { showScreen(gridReturn.id); });
+      document.getElementById("btn-shop-hero").addEventListener("click", function () { openGrid(null, null, ENTRANCE_RET); });
+      document.getElementById("btn-browse-shelves").addEventListener("click", function () { goWalk(1); });
+      document.getElementById("btn-browse-prints").addEventListener("click", function () {
+        openGrid("Photo Prints", ["Photo Prints"], { id: "screen-walk-printwall", label: "the Print Wall" });
+      });
+      updateWalkBar();
+
+      document.getElementById("mount-earrings").innerHTML = buildDisplay("Earrings", "aisle");
+      document.getElementById("mount-bracelets").innerHTML = buildDisplay("Bracelets", "aisle");
+      document.getElementById("mount-spinner").innerHTML = buildDisplay("Fidget Spinners", "aisle");
+      document.getElementById("mount-keychains").innerHTML = buildDisplay("Keychains", "aisle");
+      document.getElementById("mount-hair").innerHTML = buildDisplay("Hair Accessories", "aisle");
+      document.getElementById("mount-bookmarks").innerHTML = buildDisplay("Bookmarks", "aisle");
+      document.getElementById("mount-domino").innerHTML = buildDisplay("Domino Set", "aisle");
+      document.getElementById("mount-mugs").innerHTML = buildDisplay("Mugs & Tumblers", "aisle");
+      document.getElementById("mount-clothing").innerHTML = buildDisplay("Shirts & Aprons", "aisle");
+
+      setCounts();
+    </script>
+  </body>
+</html>
