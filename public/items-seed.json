@@ -1,0 +1,232 @@
+{
+  "items": [
+    {
+      "id": "item-01",
+      "category": "Earrings",
+      "name": "White Square Bloom Earrings",
+      "made": "Hand crocheted by Destinie",
+      "hooks": "Gold-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Hand crocheted white earrings in a square bloom design with pretty openwork detail and a flower at the center. Lightweight statement pair on gold-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-02",
+      "category": "Earrings",
+      "name": "Mauve Doily Bloom Earrings",
+      "made": "Hand crocheted by Destinie",
+      "hooks": "Gold-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Hand crocheted round doily earrings in dusty mauve and white, finished with tiny gold beads at the center. Lacy, vintage-style pair on gold-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-03",
+      "category": "Earrings",
+      "name": "Red Petal Flower Earrings",
+      "made": "Hand crocheted by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Hand crocheted flower earrings in a bold red with full, layered petals. A bright statement pair on silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-04",
+      "category": "Earrings",
+      "name": "White Halo Flower Earrings",
+      "made": "Hand crocheted by Destinie",
+      "hooks": "Gold-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Hand crocheted white flower earrings with an open halo center and scalloped petal edge. Soft, lacy pair on gold-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-05",
+      "category": "Earrings",
+      "name": "Pastel Pinwheel Flower Earrings",
+      "made": "Hand crocheted by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Hand crocheted flower earrings in sweet pastel shades of blue, pink, yellow and lavender. Each petal blends colors differently, so this pair is truly one of a kind. Silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-06",
+      "category": "Earrings",
+      "name": "Green Glitter Drop Earrings",
+      "made": "Handmade in resin by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Handmade resin drop earrings with three glitter ovals in a row \u2014 green, clear sparkle, and green again. Light-catching dangles on silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-07",
+      "category": "Earrings",
+      "name": "Kaleidoscope Bar Earrings",
+      "made": "Sublimated wood by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "stock": 2,
+      "price": 10,
+      "desc": "Wooden sublimated bar earrings with a bright kaleidoscope pattern in pink, orange, yellow and teal. Bold, lightweight statement bars on silver-tone hooks.",
+      "photos": []
+    },
+    {
+      "id": "item-08",
+      "category": "Earrings",
+      "name": "Sunny Yellow Flower Earrings",
+      "made": "Hand crocheted by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Hand crocheted flower earrings in a sunny yellow with an open center. Sweet, cheerful pair on silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-09",
+      "category": "Earrings",
+      "name": "Plaid Pop Disc Earrings",
+      "made": "Sublimated seashell by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Seashell disc earrings with a sublimated plaid pop design \u2014 red and black buffalo plaid meets bright geometric color. Fun, bold rounds on silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-10",
+      "category": "Earrings",
+      "name": "Aqua Monstera Leaf Earrings",
+      "made": "Handmade in resin by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Resin monstera leaf earrings in a dreamy aqua that fades to clear at the tips. Big tropical statement leaves on silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-11",
+      "category": "Earrings",
+      "name": "Blush Glitter Monstera Earrings",
+      "made": "Handmade in resin by Destinie",
+      "hooks": "Gold-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Resin monstera leaf earrings in blush pink with gold glitter swirled through. Tropical leaves with a sunset sparkle on gold-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-12",
+      "category": "Earrings",
+      "name": "Aqua Swirl Teardrop Earrings",
+      "made": "Handmade in resin by Destinie",
+      "hooks": "Silver-tone fishhook wires",
+      "status": "available",
+      "price": 10,
+      "desc": "Resin teardrop earrings with aqua swirled into clear, like ocean water in a drop. Light, open-frame dangles on silver-tone hooks. Only 1 pair made.",
+      "photos": []
+    },
+    {
+      "id": "item-13",
+      "category": "Fidget Spinners",
+      "name": "Green Glitter Flower Fidget Spinner",
+      "made": "Handmade in resin by Destinie",
+      "hooks": null,
+      "status": "available",
+      "price": 5,
+      "desc": "Handmade resin fidget spinner shaped like a glitter flower \u2014 green sparkle in the middle fading to aqua at the petals, with a black center cap. A pretty little spin for busy hands.",
+      "photos": []
+    },
+    {
+      "id": "item-14",
+      "category": "Bracelets",
+      "name": "\"Blessed\" Pink Word Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Letter beads spell BLESSED",
+      "status": "available",
+      "price": 1,
+      "desc": "A stretch bracelet of pearl-style beads in magenta, pink and white, with letter beads that spell out BLESSED. Sweet, bright and full of faith.",
+      "photos": []
+    },
+    {
+      "id": "item-15",
+      "category": "Bracelets",
+      "name": "\"Joyful\" Pink Word Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Letter beads spell JOYFUL",
+      "status": "available",
+      "price": 1,
+      "desc": "A stretch bracelet of pearl-style beads in magenta, pink and white, with letter beads that spell out JOYFUL. A little burst of happiness for your wrist.",
+      "photos": []
+    },
+    {
+      "id": "item-16",
+      "category": "Bracelets",
+      "name": "Pink Initial \"H\" Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Gold-tone initial bead: H",
+      "status": "available",
+      "price": 1,
+      "desc": "Pearl-style beads in shades of pink, rose and white with a single gold initial bead \u2014 the letter H. A personal little gift, ready to wear.",
+      "photos": []
+    },
+    {
+      "id": "item-17",
+      "category": "Bracelets",
+      "name": "Plain Pink Beaded Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Pearl-style beads in mixed pinks",
+      "status": "available",
+      "price": 1,
+      "desc": "A stretch bracelet of pearl-style beads in mixed shades of pink \u2014 magenta, rose, blush and pale pink. Simple, pretty and easy to stack with everything.",
+      "photos": []
+    },
+    {
+      "id": "item-18",
+      "category": "Bracelets",
+      "name": "Pink Initial \"F\" Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Gold-tone initial bead: F",
+      "status": "available",
+      "price": 1,
+      "desc": "Pearl-style beads in shades of pink with a single gold initial bead \u2014 the letter F. A personal little gift, ready to wear.",
+      "photos": []
+    },
+    {
+      "id": "item-19",
+      "category": "Bracelets",
+      "name": "White & Pink Pearl Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Silver-tone spacer beads",
+      "status": "available",
+      "price": 1,
+      "desc": "White pearl beads alternating with soft translucent pink beads and little silver spacer beads. Light, elegant and easy to wear with anything.",
+      "photos": []
+    },
+    {
+      "id": "item-20",
+      "category": "Bracelets",
+      "name": "Blue Initial \"K\" Bracelet",
+      "made": "Handmade beaded bracelet by Destinie",
+      "hooks": null,
+      "detail": "Gold-tone initial bead: K",
+      "status": "available",
+      "price": 1,
+      "desc": "Pearl-style beads in aqua and deep blue with a single gold initial bead \u2014 the letter K. Cool, calm colours with a personal touch.",
+      "photos": []
+    }
+  ]
+}

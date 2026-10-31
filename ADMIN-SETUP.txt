@@ -1,0 +1,47 @@
+DESTINIE'S CRAFT STORE — ADMIN SETUP (read this first)
+=====================================================
+
+The admin pages (/admin.html for inventory, /orders.html for orders) are
+protected by ONE password that lives in Netlify — not in this code.
+
+STEP 1 — SET THE PASSWORD (do this before anything else)
+  1. In Netlify, open your site.
+  2. Go to Site configuration > Environment variables.
+  3. Add a variable named exactly:  ADMIN_PASSWORD
+     Value: the password you want (pick something only you know).
+  4. Deploy (or redeploy) the site so the new variable takes effect.
+
+STEP 2 — SIGN IN
+  Open https://YOUR-SITE.netlify.app/admin.html and enter that password.
+  The same password opens /orders.html.
+
+IF EVERY ADMIN ACTION FAILS, IT IS ALMOST ALWAYS ONE OF THESE:
+  - "ADMIN_PASSWORD is not set in Netlify environment variables."
+    → Step 1 was skipped, or the site was not redeployed after adding it.
+  - "Wrong password." / "That password isn't right."
+    → The password typed does not match ADMIN_PASSWORD. Check for
+      typos, extra spaces, or caps lock. (The site never shows the
+      password back to you, and it is never stored in the code.)
+  - "Session expired — reload and sign in again."
+    → Your saved session was cleared. Just sign in again.
+
+OTHER THINGS TO KNOW
+  - Adding or editing items in Admin changes NOTHING on the live store
+    until you click "Save changes" at the top of the Admin page.
+  - Sizes: every category has size options in Admin (a dropdown that
+    changes with the category, plus "Other…" to type a custom size).
+    Photo Prints also get a Framed / Unframed choice. Sizes show on the
+    product page, the category pages, the cart, and the invoice.
+  - Bulk upload: name each product's 3 photos "Product", "Product (1)",
+    "Product (2)" (for example: Lavender, Lavender (1), Lavender (2)).
+    The uploader groups those three as ONE product, in that order.
+  - Event invoices: a pickup order becomes an invoice the moment the
+    shopper confirms, and it voids automatically if not paid in person
+    at the table within 30 minutes. Nothing is ever marked sold online.
+  - Do NOT use Admin "Save changes" to overwrite the live inventory
+    until you have checked it against the live items — the starter data
+    in this package may not match what is saved in Netlify.
+  - Never paste the admin password (or any secret) into a public file,
+    a page, or a chat message that shoppers can see.
+
+ITEM CODES: the item editor has an 'Item code' box (optional). When filled in, the code shows on the listing, in the cart, and on the invoice. Items added by bulk upload start without a code — add it later with Edit.

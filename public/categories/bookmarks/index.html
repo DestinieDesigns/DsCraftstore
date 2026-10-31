@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bookmarks | Destinie's Craft Store</title>
+<style>
+:root{--forest:#123e32;--green:#1e5a48;--cream:#f8f3e8;--gold:#c7a45a;--ink:#26352d}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.5 Georgia,serif}
+header{background:var(--forest);color:white;padding:20px clamp(18px,5vw,56px);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+header a{color:white;text-decoration:none}.brand{font-size:clamp(22px,3vw,30px);color:#b6d6bd}nav{display:flex;gap:18px;flex-wrap:wrap;font:14px Arial,sans-serif}
+main{max-width:1180px;margin:auto;padding:32px 20px 60px}.eyebrow{font:12px Arial,sans-serif;text-transform:uppercase;letter-spacing:.13em;color:var(--green)}h1{font-size:clamp(32px,5vw,48px);margin:.15em 0}.intro{max-width:700px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:22px 0}
+input{padding:12px 14px;border:1px solid #c9bea8;border-radius:9px;background:white;min-width:min(100%,260px);font:inherit}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:18px}
+.product{background:#fffdf8;border:1px solid #e2d7c1;border-radius:13px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 15px #2b24120b}
+.product img{width:100%;height:220px;object-fit:contain;background:#f2ecdf;padding:10px}.product .soon-tile{height:220px;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(160deg,#1f4d36,#2f5d43);color:#f6efdc;font:600 16px Georgia,serif;padding:10px}
+.details{padding:14px;display:flex;flex-direction:column;flex:1}.details h2{font-size:19px;line-height:1.25;margin:0 0 8px}.price{font:bold 18px Arial,sans-serif;color:var(--green);margin:0 0 8px}.desc{font:14px/1.5 Arial,sans-serif;color:#59635b;flex:1}
+button,.btn{border:0;border-radius:8px;background:var(--forest);color:white;padding:11px 14px;font:14px Arial,sans-serif;text-decoration:none;cursor:pointer;display:inline-block;text-align:center}
+.empty{background:#fffdf8;border:1px dashed #c9bea8;border-radius:12px;padding:24px;grid-column:1/-1}
+.cart-nav{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border:1.5px solid #d9b36a;border-radius:999px;background:#d9b36a;color:#22301f!important;font-weight:600;font-size:15px;transition:box-shadow .25s ease} .cart-nav:hover{box-shadow:0 3px 10px rgba(0,0,0,.18)} .admin-nav{display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(248,243,232,.55);background:transparent;color:#f8f3e8!important;font-weight:600;font-size:15px}
+footer{background:var(--forest);color:#f8f3e8;text-align:center;padding:22px}footer em{color:#cbdcc6}
+</style></head><body><header><a class="brand" href="/">Destinie's Craft Store</a><nav><a class="cart-nav" href="/?openCart=1">Cart</a><a href="/">Virtual Store</a><a href="/categories/">All Categories</a><a class="admin-nav" href="/admin.html">Admin</a></nav></header>
+<main><div class="eyebrow">Handmade · Home Made · With Love</div><h1>Bookmarks</h1><p class="intro">Browse bookmarks from Destinie's Craft Store. Select a product to see its details and price.</p>
+<div class="toolbar"><span id="count" aria-live="polite">Loading products…</span><input id="search" type="search" placeholder="Search this category…" aria-label="Search this category"></div>
+<div class="grid" id="products"><div class="empty">Loading your products…</div></div></main>
+<footer><em>Nothing is perfect, but everything is handmade.</em></footer>
+<script>
+const CATEGORY = "Bookmarks";
+const FALLBACK_URL = "/items-seed.json";
+const money = v => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(v)||0);
+function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function imgSrc(src){src=String(src||"").trim();if(!src)return "";if(/^(https?:|data:|blob:)/i.test(src))return src;if(src.startsWith("/api/img/"))return src;src=src.replace(/^\.\//,"").replace(/^\/+/, "");return "/"+src;}
+async function repairProductImage(img){
+ if(img.dataset.retried==="yes"){img.style.visibility="hidden";return;}
+ img.dataset.retried="yes";
+ try{
+  const r=await fetch("/items-seed.json",{cache:"no-store"});
+  if(!r.ok)throw new Error("seed unavailable");
+  const d=await r.json();
+  const item=(d.items||[]).find(x=>String(x.name||"").toLowerCase()===String(img.dataset.productName||"").toLowerCase());
+  const photo=item&&(item.photos||[]).find(p=>p&&p.src);
+  if(photo){img.src=imgSrc(photo.src);return;}
+ }catch(e){}
+ img.style.visibility="hidden";
+}
+function render(items) {
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const matching=items.filter(it=>String(it.category||"").toLowerCase()===CATEGORY.toLowerCase() && (String(it.name||"").toLowerCase().includes(q)||String(it.desc||"").toLowerCase().includes(q)));
+ document.getElementById("count").textContent=matching.length+" product"+(matching.length===1?"":"s");
+ const root=document.getElementById("products");
+ if(!matching.length){root.innerHTML='<div class="empty">There are no products currently listed in this category. Please check back soon or browse <a href="/categories/">all categories</a>.</div>';return;}
+ root.innerHTML=matching.map(it=>{const photo=(it.photos||[]).find(p=>p&&p.src);const media=photo?`<img loading="lazy" src="${safe(imgSrc(photo.src))}" data-product-name="${safe(it.name)}" alt="${safe(it.name)}" onerror="repairProductImage(this)">`:`<div class="soon-tile">Photo coming soon</div>`;return `<article class="product">${media}<div class="details"><h2>${safe(it.name)}</h2><p class="price">${money(it.price)}</p>${it.code ? `<p style="font:14px Arial,sans-serif;color:#59635b;margin:0 0 8px">Item code: ${safe(it.code)}</p>` : ""}${it.size ? `<p style="font:14px Arial,sans-serif;color:#59635b;margin:0 0 8px">Size: ${safe(it.size)}${it.framed ? " · " + safe(it.framed) : ""}</p>` : ""}<p class="desc">${safe(it.desc||it.made||"Handmade by Destinie.")}</p><button type="button" data-product="${safe(it.id)}">View product</button></div></article>`;}).join("");
+ root.querySelectorAll("[data-product]").forEach(btn=>btn.addEventListener("click",()=>{window.location.href="/?category="+encodeURIComponent(CATEGORY);}));
+}
+async function start(){
+ let items=null;
+ try{const r=await fetch("/api/items",{cache:"no-store"});if(r.ok){const d=await r.json();if(Array.isArray(d.items))items=d.items;}}catch(e){}
+ if(!items){try{const r=await fetch(FALLBACK_URL,{cache:"no-store"});if(r.ok){const d=await r.json();items=Array.isArray(d.items)?d.items:[];}}catch(e){items=[];}}
+ render(items||[]);
+}
+document.getElementById("search").addEventListener("input",async()=>{let items=[];try{const r=await fetch("/api/items",{cache:"no-store"});const d=await r.json();if(Array.isArray(d.items))items=d.items;else{const f=await fetch(FALLBACK_URL);items=(await f.json()).items||[];}}catch(e){try{items=(await (await fetch(FALLBACK_URL)).json()).items||[];}catch(_){}}render(items);});
+start();
+</script></body></html>

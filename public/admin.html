@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Store Admin — Destinie’s Craft Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#f6efdc; --surface:#fffaf0; --surface-2:#f0e7cf; --ink:#2e2b21; --ink-soft:#6f6450;
+    --green:#2f5d43; --green-bright:#3c7a57; --line:#ddd2b6; --gold:#d9b36a; --gold-ink:#22301f;
+    --sold:#8c3b2e; --error:#a33327; --ok:#2f6b3f; --radius:12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0f2418; --surface:#183324; --surface-2:#1f4230; --ink:#f2ecda; --ink-soft:#c6bda1;
+      --green:#9fd0ae; --green-bright:#bde3c9; --line:#31543f; --sold:#e08a76; --error:#f0927f; --ok:#9fd0ae;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 "Jost", system-ui, sans-serif;
+    padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0); }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  button { cursor:pointer; }
+  .hidden { display:none !important; }
+
+  /* Login */
+  .login { max-width:380px; margin:12vh auto 0; padding:28px 24px; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--radius); }
+  .login h1 { margin:0 0 4px; font-size:24px; }
+  .login p { margin:0 0 18px; color:var(--ink-soft); }
+
+  /* Layout */
+  .bar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:10px 16px; background:#1b4230; color:#f6efdc; padding-top:calc(10px + env(safe-area-inset-top,0)); }
+  .bar h1 { margin:0; font-size:19px; font-weight:600; flex:1 1 auto; }
+  .status { font-size:14px; opacity:.9; }
+  .status.dirty { color:#f3d58b; opacity:1; font-weight:600; }
+  main { max-width:1100px; margin:0 auto; padding:18px 16px 80px; display:grid; gap:18px;
+    grid-template-columns:minmax(260px,340px) 1fr; align-items:start; }
+  @media (max-width:820px) { main { grid-template-columns:1fr; } }
+
+  .panel { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; }
+  .panel h2 { margin:0 0 10px; font-size:17px; }
+
+  /* Buttons & fields */
+  .btn { border:1px solid var(--line); background:var(--surface-2); border-radius:999px; min-height:44px; padding:8px 18px; font-weight:600; }
+  .btn:hover { border-color:var(--green-bright); }
+  .btn.primary { background:var(--gold); color:var(--gold-ink); border-color:transparent; }
+  .btn.primary:hover { filter:brightness(1.06); }
+  .btn.danger { color:var(--sold); }
+  .btn.small { min-height:36px; padding:4px 12px; font-size:14px; }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  label { display:block; font-size:14px; font-weight:600; margin:12px 0 4px; }
+  input[type=text], input[type=number], input[type=password], select, textarea {
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--bg); min-height:44px; }
+  textarea { min-height:110px; resize:vertical; }
+  .hint { font-size:13px; color:var(--ink-soft); margin:3px 0 0; font-weight:400; }
+  .row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  @media (max-width:520px) { .row { grid-template-columns:1fr 1fr; } }
+  .err { color:var(--error); font-size:14px; margin:10px 0 0; min-height:1em; }
+
+  /* Item list */
+  .tools { display:flex; gap:8px; margin-bottom:10px; }
+  .tools select { flex:1; }
+  .list { display:flex; flex-direction:column; gap:8px; max-height:70vh; overflow:auto; }
+  .li { display:flex; gap:10px; align-items:center; padding:8px; border:1px solid var(--line); border-radius:10px; background:var(--bg); }
+  .li.sel { border-color:var(--green-bright); box-shadow:0 0 0 2px var(--green-bright) inset; }
+  .li button.pick { all:unset; display:flex; gap:10px; align-items:center; flex:1; min-width:0; cursor:pointer; }
+  .li img { width:48px; height:52px; object-fit:cover; border-radius:8px; background:var(--surface-2); flex:none; }
+  .soon-tile { display:flex; align-items:center; justify-content:center; text-align:center; background:linear-gradient(160deg,#1f4d36,#2f5d43); color:#f6efdc; font-family:Georgia,serif; padding:6px; }
+  .li .soon-tile { width:48px; height:52px; font-size:10px; border-radius:8px; flex:none; }
+  .slot .pv .soon-tile { width:100%; height:100%; font-size:13px; }
+  .li .t { min-width:0; }
+  .li .t b { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:600; }
+  .li .t span { font-size:13px; color:var(--ink-soft); }
+  .li .t .sold { color:var(--sold); font-weight:600; }
+  .mv { display:flex; flex-direction:column; gap:2px; }
+  .mv button { border:1px solid var(--line); background:var(--surface-2); border-radius:6px; width:30px; height:22px; font-size:11px; line-height:1; padding:0; }
+  .empty { color:var(--ink-soft); padding:20px 6px; text-align:center; }
+
+  /* Photo slots */
+  .slots { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  @media (max-width:520px) { .slots { grid-template-columns:1fr; } }
+  .slot { border:1px dashed var(--line); border-radius:10px; padding:8px; background:var(--bg); text-align:center; }
+  .slot .pv { aspect-ratio:4/4.4; border-radius:8px; background:var(--surface-2); overflow:hidden; display:grid; place-items:center;
+    color:var(--ink-soft); font-size:14px; margin-bottom:8px; }
+  .slot .pv img { width:100%; height:100%; object-fit:cover; }
+  .slot b { display:block; font-size:14px; }
+  .slot .acts { display:flex; gap:6px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
+  .slot .busy { font-size:13px; color:var(--ink-soft); }
+
+
+  /* Bulk image uploader */
+  .bulk-panel { grid-column:1 / -1; }
+  .bulk-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .bulk-head h2 { margin:0 0 3px; }
+  .bulk-head p { max-width:760px; }
+  .bulk-pill { background:var(--surface-2); border:1px solid var(--line); padding:5px 10px; border-radius:999px; font-size:13px; font-weight:600; white-space:nowrap; }
+  .bulk-drop { border:2px dashed var(--line); border-radius:14px; background:var(--bg); padding:24px 16px; display:flex; align-items:center; flex-direction:column; gap:9px; text-align:center; margin-top:12px; }
+  .bulk-drop.drag { border-color:var(--green-bright); background:var(--surface-2); }
+  .bulk-upload-icon { width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:var(--surface-2); color:var(--green); font-size:28px; }
+  .bulk-tools { display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; margin:12px 0 4px; }
+  .bulk-select-all { display:flex; gap:8px; align-items:center; margin:0; font-size:14px; }
+  .bulk-select-all input { width:18px; height:18px; }
+  .bulk-summary { margin:14px 0 8px; font-weight:600; }
+  .bulk-images { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; margin-top:14px; }
+  .bulk-image-card { border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--bg); min-width:0; }
+  .bulk-image-card img { width:100%; height:160px; object-fit:contain; background:var(--surface-2); display:block; }
+  .bulk-image-body { padding:10px; }
+  .bulk-image-filename { font-size:12px; color:var(--ink-soft); overflow-wrap:anywhere; margin-bottom:5px; }
+  .bulk-image-body label { margin-top:8px; }
+  .bulk-image-body input[type=text], .bulk-image-body select { min-height:40px; padding:7px 9px; }
+  .bulk-groups { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:12px; }
+  .bulk-group-card { border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--bg); }
+  .bulk-group-card.problem { border-color:var(--error); }
+  .bulk-group-title { font-weight:600; overflow-wrap:anywhere; }
+  .bulk-group-photos { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:10px 0; }
+  .bulk-group-photo { position:relative; min-width:0; }
+  .bulk-group-photo img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:7px; display:block; background:var(--surface-2); }
+  .bulk-group-photo label { font-size:11px; display:flex; align-items:center; gap:4px; margin:5px 0 0; }
+  .bulk-group-photo input { margin:0; }
+  .bulk-group-meta { font-size:13px; color:var(--ink-soft); }
+  .bulk-review { margin-top:20px; }
+  .bulk-review h3 { margin:0 0 4px; font-size:17px; }
+  .bulk-approve-row { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; border-top:1px solid var(--line); margin-top:18px; padding-top:14px; }
+  @media(max-width:520px) { .bulk-approve-row .btn { width:100%; } }
+
+  .toast { position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0)); transform:translateX(-50%);
+    background:#1b4230; color:#f6efdc; padding:12px 18px; border-radius:999px; font-weight:600; z-index:50;
+    box-shadow:0 8px 24px rgba(0,0,0,.3); max-width:92vw; }
+  .toast.bad { background:#8c3b2e; }
+</style>
+</head>
+<body>
+
+<!-- ============ Login ============ -->
+<section class="login" id="login">
+  <h1>Store admin</h1>
+  <p>Enter your admin password to add or edit items.</p>
+  <form id="login-form">
+    <label for="pw" style="margin-top:0">Password</label>
+    <input type="password" id="pw" autocomplete="current-password" required />
+    <p class="err" id="login-err" role="alert"></p>
+    <button class="btn primary" type="submit" style="width:100%;margin-top:6px">Sign in</button>
+  </form>
+</section>
+
+<!-- ============ App ============ -->
+<div id="app" class="hidden">
+  <header class="bar">
+    <h1>Destinie’s Craft Store — Admin</h1>
+    <span class="status" id="status"></span>
+    <a class="btn small" href="/orders.html" style="text-decoration:none;display:inline-flex;align-items:center">Order requests</a>
+    <a class="btn small" href="/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">View store</a>
+    <button class="btn primary" id="save" type="button">Save changes</button>
+  </header>
+
+  <main>
+
+    <section class="panel bulk-panel" id="bulk-upload-panel">
+      <div class="bulk-head">
+        <div><h2>Bulk image upload</h2><p class="hint">Upload a batch, use matching product names to group photos, check category suggestions, then approve the new products.</p></div>
+        <span class="bulk-pill">3 photos per item</span>
+      </div>
+      <div class="bulk-drop" id="bulk-drop">
+        <div class="bulk-upload-icon">↑</div>
+        <strong>Choose all your product photos at once</strong>
+        <span class="hint">JPG, PNG, or WebP. Gemini-named files work best when the product name is included in the filename.</span>
+        <button class="btn primary" type="button" id="bulk-choose">Choose photos</button>
+        <input type="file" id="bulk-files" accept="image/jpeg,image/png,image/webp" multiple class="hidden" />
+      </div>
+      <div id="bulk-workspace" class="hidden">
+        <div class="bulk-summary" id="bulk-summary"></div>
+        <div class="bulk-tools">
+          <label class="bulk-select-all"><input type="checkbox" id="bulk-auto-name" /> Use filename as product name when available</label>
+          <button class="btn small" type="button" id="bulk-clear">Clear batch</button>
+        </div>
+        <p class="hint">Give every photo that belongs to the same product the same name. Matching names are grouped automatically. Camera filenames like IMG_1042.jpg need a product name entered below.</p>
+        <div id="bulk-images" class="bulk-images"></div>
+        <div class="bulk-review">
+          <h3>Product groups</h3>
+          <p class="hint">Review each group. The first photo is the main image by default. You can change it before approval.</p>
+          <div id="bulk-groups" class="bulk-groups"></div>
+        </div>
+        <div class="bulk-approve-row">
+          <label class="bulk-select-all"><input type="checkbox" id="bulk-confirm" /> I've checked the names, categories, and photo groups.</label>
+          <button class="btn primary" type="button" id="bulk-approve" disabled>Approve & add products</button>
+        </div>
+        <p class="hint">Approval uploads the photos and adds draft products to this Admin session. Your store changes only when you then click <b>Save changes</b> at the top.</p>
+        <p class="err" id="bulk-error" role="alert"></p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Items <span id="count" style="font-weight:400;color:var(--ink-soft)"></span></h2>
+      <div class="tools">
+        <select id="filter" aria-label="Filter by category"></select>
+        <button class="btn small primary" id="add" type="button">+ Add item</button>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+
+    <section class="panel" id="editor">
+      <div class="empty" id="editor-empty">Pick an item on the left, or tap “Add item”.</div>
+      <form id="form" class="hidden" autocomplete="off">
+        <h2 id="form-title">Edit item</h2>
+
+        <label for="f-name">Name</label>
+        <input type="text" id="f-name" maxlength="200" />
+
+        <label for="f-code">Item code</label>
+        <input type="text" id="f-code" maxlength="40" placeholder="e.g. K-01 — leave blank until you decide" />
+        <p class="hint">Shows on the listing, in the cart, and on the invoice when filled in.</p>
+
+        <div class="row">
+          <div>
+            <label for="f-cat">Category</label>
+            <select id="f-cat"></select>
+          </div>
+          <div>
+            <label for="f-price">Price ($)</label>
+            <input type="number" id="f-price" min="0" step="0.01" inputmode="decimal" />
+          </div>
+          <div>
+            <label for="f-stock">How many</label>
+            <input type="number" id="f-stock" min="1" step="1" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="f-size">Size</label>
+            <select id="f-size"></select>
+            <input type="text" id="f-size-custom" maxlength="80" placeholder="Type a custom size" class="hidden" style="margin-top:8px" />
+            <p class="hint">Pick a size for this category, or choose Other and type your own.</p>
+          </div>
+          <div id="f-framed-wrap">
+            <label for="f-framed">Framed?</label>
+            <select id="f-framed">
+              <option value="">Not specified</option>
+              <option value="framed">Framed</option>
+              <option value="unframed">Unframed</option>
+            </select>
+            <p class="hint">Photo prints only.</p>
+          </div>
+        </div>
+
+        <label for="f-status">Status</label>
+        <select id="f-status">
+          <option value="available">Available</option>
+          <option value="sold">Sold</option>
+        </select>
+
+        <label for="f-made">Made by</label>
+        <input type="text" id="f-made" maxlength="200" />
+
+        <label for="f-extra" id="f-extra-label">Details</label>
+        <input type="text" id="f-extra" maxlength="500" />
+        <p class="hint" id="f-extra-hint"></p>
+
+        <label for="f-desc">Description</label>
+        <textarea id="f-desc" maxlength="2000"></textarea>
+
+        <label>Photos <span class="hint" style="display:inline">— the first one is the main photo and is required</span></label>
+        <div class="slots" id="slots"></div>
+
+        <p class="err" id="form-err" role="alert"></p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn small" type="button" id="dup">Duplicate</button>
+          <button class="btn small danger" type="button" id="del">Delete item</button>
+        </div>
+        <p class="hint">Changes go live when you tap <b>Save changes</b> at the top.</p>
+      </form>
+    </section>
+  </main>
+</div>
+
+<div class="toast hidden" id="toast" role="status"></div>
+<input type="file" id="file" accept="image/*" class="hidden" />
+
+<script>
+(function () {
+  "use strict";
+
+  var CATEGORIES = ["Bracelets", "Earrings", "Keychains", "Hair Accessories", "Mugs & Tumblers",
+    "Shirts & Aprons", "Bookmarks", "Domino Set", "Fidget Spinners", "Photo Prints"];
+  var KINDS = ["Plain", "Boutique Display", "Lifestyle"];
+
+  /* ---------- sizes: one set per category; "Other" lets the owner type her own ---------- */
+  var SIZES = {
+    "Earrings": ["One size"],
+    "Bracelets": ["Small", "Medium", "Large", "One size"],
+    "Fidget Spinners": ["One size"],
+    "Keychains": ["One size"],
+    "Hair Accessories": ["One size"],
+    "Mugs & Tumblers": ["11 oz", "15 oz", "20 oz", "30 oz"],
+    "Shirts & Aprons": ["XS", "S", "M", "L", "XL", "2XL"],
+    "Bookmarks": ["Standard"],
+    "Domino Set": ["Standard", "Double-Six", "Double-Nine"],
+    "Photo Prints": ["4x6", "5x7", "8x10", "11x14", "16x20"]
+  };
+  function sizeOptionsFor(cat) { return SIZES[cat] || ["One size"]; }
+  /* Drive/upload naming is exactly 3 files per product: "Lavender",
+     "Lavender (1)", "Lavender (2)". The (1)/(2) suffix is a photo counter,
+     not part of the product name — strip it so all three group as one product. */
+  function stripPhotoSuffix(name) {
+    return String(name || "").replace(/\s*\(\d+\)\s*$/, "").trim();
+  }
+  function photoSuffixIndex(name) {
+    // Works on filenames ("Lavender (1).jpg") and on bare names alike: drop
+    // any file extension first, then read the trailing (number).
+    var base = String(name || "").replace(/\.[^.]+$/, "");
+    var m = /\((\d+)\)\s*$/.exec(base);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+  function groupKeyFor(name) { return normalizeProductName(stripPhotoSuffix(name)); }
+
+  var password = "";
+  var items = [];
+  var selId = null;
+  var dirty = false;
+  var uploading = 0;
+
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- helpers ---------- */
+  function toast(msg, bad) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.toggle("bad", !!bad);
+    t.classList.remove("hidden");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { t.classList.add("hidden"); }, bad ? 5000 : 2600);
+  }
+
+  function api(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ "x-admin-password": password }, opts.headers || {});
+    return fetch(path, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (data) {
+        if (!r.ok) {
+          var e = new Error(data.error || ("Request failed (" + r.status + ")"));
+          e.status = r.status;
+          throw e;
+        }
+        return data;
+      });
+    });
+  }
+
+  function setDirty(v) {
+    dirty = v;
+    var s = $("status");
+    s.textContent = v ? "Unsaved changes" : "All saved";
+    s.classList.toggle("dirty", v);
+  }
+  window.addEventListener("beforeunload", function (e) {
+    if (dirty || uploading) { e.preventDefault(); e.returnValue = ""; }
+  });
+
+  function byId(id) { for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i]; return null; }
+
+  function nextId() {
+    var max = 0;
+    items.forEach(function (it) {
+      var m = /^item-(\d+)$/.exec(it.id);
+      if (m) max = Math.max(max, parseInt(m[1], 10));
+    });
+    var n = max + 1;
+    return "item-" + (n < 10 ? "0" + n : n);
+  }
+
+  function defaults(cat) {
+    if (cat === "Earrings") return { made: "Hand crocheted by Destinie", price: 10 };
+    if (cat === "Bracelets") return { made: "Handmade beaded bracelet by Destinie", price: 1 };
+    if (cat === "Fidget Spinners") return { made: "Handmade resin by Destinie", price: 5 };
+    // No standing price exists for any other category: default to 0 and let
+    // the save check below force the owner to set a real price. Never invent one.
+    return { made: "Handmade by Destinie", price: 0 };
+  }
+
+  function photoText(kind, cat) {
+    var thing = cat === "Earrings" ? "pair" : "item";
+    if (kind === "Plain") return { label: "The exact item you'll receive", note: "Plain photo — this is the actual " + thing + " you will get." };
+    if (kind === "Boutique Display") return { label: "Styled display photo", note: "Shown styled in a boutique display." };
+    return { label: "Lifestyle photo — styled scene", note: "Shown in a styled scene." };
+  }
+
+  /* ---------- login ---------- */
+  function boot(pw) {
+    password = pw;
+    return api("/api/items?check=1").then(function () {
+      sessionStorage.setItem("craft-admin-pw", pw);
+      return api("/api/items");
+    }).then(function (data) {
+      if (Array.isArray(data.items)) return data.items;
+      // Nothing saved yet: start from the items that were built into the first version of the site.
+      return fetch("/items-seed.json").then(function (r) { return r.json(); }).then(function (d) { return d.items || []; });
+    }).then(function (list) {
+      items = list;
+      $("login").classList.add("hidden");
+      $("app").classList.remove("hidden");
+      buildFilter();
+      renderList();
+      setDirty(false);
+    });
+  }
+
+  $("login-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    $("login-err").textContent = "";
+    boot($("pw").value).catch(function (err) {
+      $("login-err").textContent = err.status === 401 ? "That password isn't right."
+        : err.status === 404 ? "This site's back end isn't deployed yet (404). The site was likely put up by drag-and-drop, which leaves the back end behind — it needs a deploy that includes the site's functions."
+        : err.message;
+    });
+  });
+
+  var remembered = sessionStorage.getItem("craft-admin-pw");
+  if (remembered) boot(remembered).catch(function () { sessionStorage.removeItem("craft-admin-pw"); });
+
+  /* ---------- list ---------- */
+  function buildFilter() {
+    var cats = CATEGORIES.slice();
+    items.forEach(function (it) { if (cats.indexOf(it.category) < 0) cats.push(it.category); });
+    var f = $("filter");
+    var cur = f.value || "";
+    f.innerHTML = '<option value="">All categories</option>' +
+      cats.map(function (c) { return '<option>' + esc(c) + '</option>'; }).join("");
+    f.value = cur;
+    var sel = $("f-cat");
+    sel.innerHTML = cats.map(function (c) { return '<option>' + esc(c) + '</option>'; }).join("");
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderList() {
+    var cat = $("filter").value;
+    var shown = items.filter(function (it) { return !cat || it.category === cat; });
+    $("count").textContent = "(" + items.length + ")";
+    var list = $("list");
+    if (!shown.length) { list.innerHTML = '<div class="empty">No items here yet.</div>'; return; }
+    list.innerHTML = shown.map(function (it) {
+      var sold = it.status === "sold";
+      return '<div class="li' + (it.id === selId ? " sel" : "") + '" data-id="' + esc(it.id) + '">' +
+        '<button class="pick" type="button" data-pick="' + esc(it.id) + '">' +
+        (it.photos.length ? '<img src="' + esc(it.photos[0].src) + '" alt="" />' : '<span class="soon-tile">Photo coming soon</span>') +
+        '<span class="t"><b>' + esc(it.name) + '</b><span>' + esc(it.category) + ' · $' + esc(it.price) +
+        (it.code ? ' · ' + esc(it.code) : "") + (it.size ? ' · ' + esc(it.size) : "") + (it.framed ? ' · ' + esc(it.framed) : "") +
+        (sold ? ' · <span class="sold">Sold</span>' : "") + '</span></span></button>' +
+        '<span class="mv"><button type="button" data-up="' + esc(it.id) + '" aria-label="Move up">▲</button>' +
+        '<button type="button" data-down="' + esc(it.id) + '" aria-label="Move down">▼</button></span></div>';
+    }).join("");
+  }
+
+  $("filter").addEventListener("change", renderList);
+
+  $("list").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.pick) { select(b.dataset.pick); return; }
+    var id = b.dataset.up || b.dataset.down;
+    if (!id) return;
+    var i = items.findIndex(function (x) { return x.id === id; });
+    var j = b.dataset.up ? i - 1 : i + 1;
+    if (j < 0 || j >= items.length) return;
+    var tmp = items[i]; items[i] = items[j]; items[j] = tmp;
+    setDirty(true);
+    renderList();
+  });
+
+  /* ---------- editor ---------- */
+  function slotsFor(it) {
+    // One slot per standard photo kind; any other photos are kept untouched at the end.
+    var slots = {};
+    var extra = [];
+    it.photos.forEach(function (p) {
+      if (KINDS.indexOf(p.kind) >= 0 && !slots[p.kind]) slots[p.kind] = p; else extra.push(p);
+    });
+    return { slots: slots, extra: extra };
+  }
+
+  function select(id) {
+    selId = id;
+    var it = byId(id);
+    if (!it) return;
+    $("editor-empty").classList.add("hidden");
+    $("form").classList.remove("hidden");
+    $("form-title").textContent = "Edit: " + it.name;
+    $("f-name").value = it.name;
+    $("f-code").value = it.code || "";
+    $("f-cat").value = it.category;
+    $("f-price").value = it.price;
+    $("f-stock").value = it.stock || 1;
+    $("f-status").value = it.status;
+    syncSizeField(it);
+    $("f-made").value = it.made || "";
+    syncExtraField(it);
+    $("f-desc").value = it.desc || "";
+    $("form-err").textContent = "";
+    renderSlots();
+    renderList();
+    if (window.matchMedia("(max-width:820px)").matches) $("editor").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function syncExtraField(it) {
+    var earrings = $("f-cat").value === "Earrings";
+    $("f-extra-label").textContent = earrings ? "Hooks" : "Details";
+    $("f-extra-hint").textContent = earrings ? "For example: Gold-tone fishhook wires" : "Optional — for example: Gold-tone initial bead: K";
+    $("f-extra").value = (earrings ? it.hooks : it.detail) || "";
+  }
+
+  // Size dropdown follows the category. A size already saved on the item is
+  // kept: exact preset matches select that preset, anything else lands in
+  // "Other" with the saved text in the custom box. Items with no saved size
+  // stay blank — a size is never invented for them.
+  function syncSizeField(it) {
+    var cat = $("f-cat").value;
+    var presets = sizeOptionsFor(cat);
+    var sel = $("f-size");
+    var cur = it.size || "";
+    sel.innerHTML = '<option value="">Choose a size (optional)</option>' +
+      presets.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join("") +
+      '<option value="Other">Other…</option>';
+    if (cur && presets.indexOf(cur) >= 0) { sel.value = cur; $("f-size-custom").value = ""; }
+    else if (cur) { sel.value = "Other"; $("f-size-custom").value = cur; }
+    else { sel.value = ""; $("f-size-custom").value = ""; }
+    $("f-size-custom").classList.toggle("hidden", sel.value !== "Other");
+    $("f-framed-wrap").style.display = cat === "Photo Prints" ? "" : "none";
+    $("f-framed").value = cat === "Photo Prints" ? (it.framed || "") : "";
+  }
+
+  function renderSlots() {
+    var it = byId(selId);
+    if (!it) return;
+    var s = slotsFor(it).slots;
+    $("slots").innerHTML = KINDS.map(function (kind) {
+      var p = s[kind];
+      var req = kind === "Plain" ? " (main)" : " (optional)";
+      return '<div class="slot" data-kind="' + esc(kind) + '">' +
+        '<div class="pv">' + (p ? '<img src="' + esc(p.src) + '" alt="" />' : '<div class="soon-tile">Photo coming soon</div>') + '</div>' +
+        '<b>' + esc(kind) + req + '</b>' +
+        '<div class="acts"><button class="btn small" type="button" data-choose="' + esc(kind) + '">' + (p ? "Replace" : "Add photo") + '</button>' +
+        (p && kind !== "Plain" ? '<button class="btn small danger" type="button" data-remove="' + esc(kind) + '">Remove</button>' : "") +
+        '</div></div>';
+    }).join("");
+  }
+
+  // Write the form fields back into the selected item.
+  function readForm() {
+    var it = byId(selId);
+    if (!it) return;
+    var cat = $("f-cat").value;
+    it.name = $("f-name").value;
+    it.name = $("f-name").value;
+    var codeVal = $("f-code").value.trim();
+    if (codeVal) it.code = codeVal.slice(0, 40); else delete it.code;
+    it.category = cat;
+    it.price = $("f-price").value === "" ? 0 : Number($("f-price").value);
+    var stock = Math.max(1, Math.floor(Number($("f-stock").value) || 1));
+    if (stock > 1) it.stock = stock; else delete it.stock;
+    it.status = $("f-status").value;
+    var sizeSel = $("f-size").value;
+    var sizeVal = sizeSel === "Other" ? $("f-size-custom").value.trim() : sizeSel;
+    if (sizeVal) it.size = sizeVal.slice(0, 80); else delete it.size;
+    if (cat === "Photo Prints") {
+      var fr = $("f-framed").value;
+      if (fr) it.framed = fr; else delete it.framed;
+    } else delete it.framed;
+    it.made = $("f-made").value;
+    var extra = $("f-extra").value.trim();
+    if (cat === "Earrings") { it.hooks = extra || null; delete it.detail; }
+    else { it.hooks = null; if (extra) it.detail = extra; else delete it.detail; }
+    it.desc = $("f-desc").value;
+  }
+
+  $("form").addEventListener("input", function () {
+    readForm();
+    setDirty(true);
+    var it = byId(selId);
+    if (it) $("form-title").textContent = "Edit: " + (it.name || "(unnamed)");
+    renderList();
+  });
+  $("form").addEventListener("change", function (e) {
+    if (e.target.id === "f-cat") {
+      var it = byId(selId);
+      if (it) { it.category = $("f-cat").value; syncExtraField(it); syncSizeField(it); readForm(); renderList(); }
+    }
+    if (e.target.id === "f-size") {
+      $("f-size-custom").classList.toggle("hidden", $("f-size").value !== "Other");
+      readForm();
+      setDirty(true);
+    }
+    if (e.target.id === "f-framed") { readForm(); setDirty(true); }
+  });
+  $("form").addEventListener("submit", function (e) { e.preventDefault(); });
+
+  /* ---------- add / duplicate / delete ---------- */
+  $("add").addEventListener("click", function () {
+    var cat = $("filter").value || "Earrings";
+    var d = defaults(cat);
+    var it = { id: nextId(), category: cat, name: "New item", made: d.made, hooks: null,
+      status: "available", price: d.price, desc: "", photos: [] };
+    items.push(it);
+    setDirty(true);
+    buildFilter();
+    $("filter").value = $("filter").value; // keep filter
+    select(it.id);
+    $("f-name").focus();
+    $("f-name").select();
+  });
+
+  $("dup").addEventListener("click", function () {
+    var it = byId(selId);
+    if (!it) return;
+    var copy = JSON.parse(JSON.stringify(it));
+    copy.id = nextId();
+    copy.name = it.name + " (copy)";
+    items.splice(items.indexOf(it) + 1, 0, copy);
+    setDirty(true);
+    renderList();
+    select(copy.id);
+  });
+
+  $("del").addEventListener("click", function () {
+    var it = byId(selId);
+    if (!it) return;
+    if (!confirm("Delete “" + it.name + "”? This takes effect when you save.")) return;
+    items.splice(items.indexOf(it), 1);
+    selId = null;
+    $("form").classList.add("hidden");
+    $("editor-empty").classList.remove("hidden");
+    setDirty(true);
+    renderList();
+  });
+
+  /* ---------- photos ---------- */
+  var pendingKind = null;
+
+  $("slots").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.choose) { pendingKind = b.dataset.choose; $("file").value = ""; $("file").click(); }
+    if (b.dataset.remove) {
+      var it = byId(selId);
+      it.photos = it.photos.filter(function (p) { return p.kind !== b.dataset.remove; });
+      setDirty(true);
+      renderSlots();
+      renderList();
+    }
+  });
+
+  // Shrink big phone photos before uploading (max 1600px wide/tall, JPEG).
+  function shrink(file) {
+    return createImageBitmap(file).then(function (bmp) {
+      var max = 1600, w = bmp.width, h = bmp.height;
+      var scale = Math.min(1, max / Math.max(w, h));
+      var c = document.createElement("canvas");
+      c.width = Math.round(w * scale);
+      c.height = Math.round(h * scale);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      return new Promise(function (res, rej) {
+        c.toBlob(function (b) { b ? res(b) : rej(new Error("Couldn't process that photo.")); }, "image/jpeg", 0.86);
+      });
+    }, function () {
+      throw new Error("Couldn't read that photo. Try a JPG or PNG.");
+    });
+  }
+
+  $("file").addEventListener("change", function () {
+    var file = $("file").files[0];
+    var kind = pendingKind;
+    var it = byId(selId);
+    if (!file || !kind || !it) return;
+    var id = it.id;
+
+    var slot = document.querySelector('.slot[data-kind="' + kind + '"] .pv');
+    if (slot) slot.innerHTML = '<span class="busy">Uploading…</span>';
+    uploading++;
+
+    shrink(file)
+      .then(function (blob) {
+        return api("/api/upload", { method: "POST", headers: { "content-type": "image/jpeg" }, body: blob });
+      })
+      .then(function (res) {
+        var target = byId(id);
+        if (!target) return;
+        var txt = photoText(kind, target.category);
+        var existing = target.photos.filter(function (p) { return p.kind === kind; })[0];
+        if (existing) {
+          existing.src = res.src;
+        } else {
+          target.photos.push({ src: res.src, kind: kind, label: txt.label, note: txt.note });
+          // keep the standard order: Plain, Boutique Display, Lifestyle, then anything else
+          target.photos.sort(function (a, b) {
+            var ia = KINDS.indexOf(a.kind), ib = KINDS.indexOf(b.kind);
+            return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+          });
+        }
+        setDirty(true);
+      })
+      .catch(function (err) { toast(err.message, true); })
+      .then(function () {
+        uploading--;
+        if (selId === id) renderSlots();
+        renderList();
+      });
+  });
+
+
+  /* ---------- bulk image upload ---------- */
+  var bulkFiles = [];
+  var bulkUrls = [];
+  var bulkCategories = CATEGORIES.slice();
+  var categoryKeywords = [
+    [/bracelet|bead bracelet|wristlet/i, "Bracelets"],
+    [/earring|earrings|crochet earring/i, "Earrings"],
+    [/keychain|key chain|keys|key fob/i, "Keychains"],
+    [/hair|scrunchie|clip|headband|barrette/i, "Hair Accessories"],
+    [/mug|tumbler|cup|drinkware/i, "Mugs & Tumblers"],
+    [/shirt|apron/i, "Shirts & Aprons"],
+    [/bookmark|bible marker/i, "Bookmarks"],
+    [/domino/i, "Domino Set"],
+    [/fidget|spinner/i, "Fidget Spinners"],
+    [/print|photo|picture|artwork/i, "Photo Prints"]
+  ];
+  function normalizeProductName(v) { return String(v || "").trim().replace(/\s+/g, " ").toLocaleLowerCase(); }
+  function nameFromFilename(file) {
+    var base = file.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+    // "Lavender (1)" / "Lavender (2)" are the 2nd/3rd photos of Lavender, not
+    // separate products: drop the trailing photo counter from the name.
+    base = stripPhotoSuffix(base);
+    if (/^(img|dsc|dscn|pxl|photo|image|screenshot|whatsapp image|received image)\s*\d*$/i.test(base) || /^\d{5,}$/.test(base)) return "";
+    return base.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  function suggestCategory(name) {
+    for (var i=0;i<categoryKeywords.length;i++) if (categoryKeywords[i][0].test(name || "")) return categoryKeywords[i][1];
+    return "";
+  }
+  function revokeBulkUrls() { bulkUrls.forEach(function (u) { URL.revokeObjectURL(u); }); bulkUrls = []; }
+  function clearBulk() {
+    revokeBulkUrls(); bulkFiles = []; $("bulk-files").value = ""; $("bulk-workspace").classList.add("hidden");
+    $("bulk-images").innerHTML = ""; $("bulk-groups").innerHTML = ""; $("bulk-confirm").checked = false; $("bulk-error").textContent = "";
+  }
+  function addBulkFiles(fileList) {
+    var valid = Array.prototype.slice.call(fileList || []).filter(function(f){ return /^image\/(jpeg|png|webp)$/i.test(f.type) && f.size <= 15*1024*1024; });
+    if (!valid.length) { toast("Choose JPG, PNG, or WebP images under 15 MB each.", true); return; }
+    var start = bulkFiles.length;
+    valid.forEach(function(file) {
+      var url = URL.createObjectURL(file); bulkUrls.push(url);
+      var filenameName = nameFromFilename(file);
+      bulkFiles.push({ file:file, url:url, name:filenameName, category:suggestCategory(filenameName), main:false, uid:"bulk-"+(start+bulkFiles.length+1), suffix:photoSuffixIndex(file.name) });
+    });
+    $("bulk-workspace").classList.remove("hidden"); $("bulk-confirm").checked = false;
+    renderBulkImages(); renderBulkGroups();
+  }
+  function bulkGroups() {
+    var groups = [], map = {};
+    bulkFiles.forEach(function(photo, index) {
+      var key = groupKeyFor(photo.name);
+      if (!key) key = "__unnamed_"+index;
+      if (!map[key]) { map[key] = { key:key, name:stripPhotoSuffix(photo.name.trim()), photos:[], category:photo.category || suggestCategory(photo.name), existing:null }; groups.push(map[key]); }
+      map[key].photos.push(photo);
+      if (!map[key].category && photo.category) map[key].category = photo.category;
+    });
+    groups.forEach(function(g) {
+      // Photo order inside a group follows the upload numbering: the plain
+      // file first, then (1), then (2). That order becomes Plain, Boutique
+      // Display, Lifestyle on approval.
+      g.photos.sort(function (a, b) { return (a.suffix || 0) - (b.suffix || 0); });
+      g.existing = items.find(function(it){ return groupKeyFor(it.name) === g.key; }) || null;
+      g.size = g.photos[0] ? (g.photos[0].size || "") : "";
+      g.framed = g.photos[0] ? (g.photos[0].framed || "") : "";
+    });
+    return groups;
+  }
+  function renderBulkImages() {
+    var cats = bulkCategories.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join("");
+    $("bulk-images").innerHTML = bulkFiles.map(function(p,i) {
+      return '<article class="bulk-image-card" data-bulk-index="'+i+'"><img src="'+esc(p.url)+'" alt="Preview of '+esc(p.file.name)+'" loading="lazy"><div class="bulk-image-body">'+
+        '<div class="bulk-image-filename">'+esc(p.file.name)+' · '+(p.file.size/1024/1024).toFixed(1)+' MB</div>'+
+        '<label for="bulk-name-'+i+'">Product name</label><input type="text" id="bulk-name-'+i+'" data-bulk-name="'+i+'" value="'+esc(p.name)+'" placeholder="e.g. Blue Keys" maxlength="200">'+
+        '<label for="bulk-cat-'+i+'">Category suggestion</label><select id="bulk-cat-'+i+'" data-bulk-cat="'+i+'"><option value="">Choose category</option>'+cats+'</select></div></article>';
+    }).join("");
+    bulkFiles.forEach(function(p,i){ var sel=$("bulk-cat-"+i); if(sel) sel.value=p.category || ""; });
+    $("bulk-summary").textContent = bulkFiles.length+" photo"+(bulkFiles.length===1?"":"s")+" selected · names that match will be grouped together.";
+  }
+  function renderBulkGroups() {
+    var groups = bulkGroups();
+    var cats = bulkCategories.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join("");
+    $("bulk-groups").innerHTML = groups.length ? groups.map(function(g,gi) {
+      var countText = g.photos.length===3 ? "3 of 3 photos" : g.photos.length<3 ? g.photos.length+" of 3 photos · add "+(3-g.photos.length)+" more" : g.photos.length+" photos · check extra images";
+      var existingText = g.existing ? '<div class="err">A product with this name already exists. Rename it or add photos to the existing item manually; this batch will not overwrite it.</div>' : "";
+      var noName = !g.name.trim();
+      var thumbs = g.photos.map(function(p,pi) { var idx=bulkFiles.indexOf(p); return '<div class="bulk-group-photo"><img src="'+esc(p.url)+'" alt="Photo '+(pi+1)+'"><label><input type="radio" name="bulk-main-'+gi+'" data-bulk-main="'+idx+'" '+((p.main || (!g.photos.some(function(x){return x.main;}) && pi===0))?'checked':'')+'> Main photo</label></div>'; }).join("");
+      var sizePresets = sizeOptionsFor(g.category);
+      var sizeOpts = '<option value="">Choose a size (optional)</option>' +
+        sizePresets.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join("") +
+        '<option value="Other">Other…</option>';
+      var framedCtl = g.category === "Photo Prints"
+        ? '<label for="bulk-group-framed-' + gi + '">Framed?</label><select id="bulk-group-framed-' + gi + '" data-group-framed="' + gi + '"><option value="">Not specified</option><option value="framed">Framed</option><option value="unframed">Unframed</option></select>'
+        : "";
+      return '<article class="bulk-group-card '+((g.photos.length!==3||g.existing||noName||!g.category)?'problem':'')+'"><div class="bulk-group-title">'+esc(g.name || "Unnamed product")+'</div><div class="bulk-group-meta">'+countText+'</div><div class="bulk-group-photos">'+thumbs+'</div>'+existingText+
+        '<label for="bulk-group-cat-'+gi+'">Product category</label><select id="bulk-group-cat-'+gi+'" data-group-cat="'+gi+'"><option value="">Choose category</option>'+cats+'</select>'+
+        '<label for="bulk-group-size-'+gi+'">Size</label><select id="bulk-group-size-'+gi+'" data-group-size="'+gi+'">'+sizeOpts+'</select>'+
+        '<input type="text" id="bulk-group-size-custom-'+gi+'" data-group-size-custom="'+gi+'" maxlength="80" placeholder="Type a custom size" class="hidden" style="margin-top:8px" />' +
+        framedCtl +
+        '<div class="bulk-group-meta" style="margin-top:8px">'+(g.category ? 'Suggested from the name: '+esc(g.category) : 'No confident suggestion. Please choose a category.')+'</div></article>';
+    }).join("") : '<div class="empty">Upload photos to create product groups.</div>';
+    groups.forEach(function(g,gi){
+      var s=$("bulk-group-cat-"+gi); if(s) s.value=g.category || "";
+      var presets = sizeOptionsFor(g.category);
+      var ss=$("bulk-group-size-"+gi);
+      var sc=$("bulk-group-size-custom-"+gi);
+      if (ss) {
+        if (g.size && presets.indexOf(g.size) >= 0) { ss.value = g.size; if (sc) sc.classList.add("hidden"); }
+        else if (g.size) { ss.value = "Other"; if (sc) { sc.value = g.size; sc.classList.remove("hidden"); } }
+        else { ss.value = ""; if (sc) sc.classList.add("hidden"); }
+      }
+      var fs=$("bulk-group-framed-"+gi); if (fs) fs.value = g.framed || "";
+    });
+    var count = groups.length;
+    $("bulk-summary").textContent = bulkFiles.length+" photos · "+count+" product group"+(count===1?"":"s")+" detected.";
+    updateBulkApprove();
+  }
+  function updateBulkApprove() {
+    var groups=bulkGroups();
+    var valid=groups.length>0 && groups.every(function(g){ return g.name.trim() && g.photos.length===3 && !!g.category && !g.existing; });
+    $("bulk-approve").disabled = !(valid && $("bulk-confirm").checked);
+  }
+  $("bulk-choose").addEventListener("click", function(){ $("bulk-files").click(); });
+  $("bulk-files").addEventListener("change", function(e){ addBulkFiles(e.target.files); });
+  $("bulk-drop").addEventListener("dragover", function(e){e.preventDefault();$("bulk-drop").classList.add("drag");});
+  $("bulk-drop").addEventListener("dragleave", function(){ $("bulk-drop").classList.remove("drag"); });
+  $("bulk-drop").addEventListener("drop", function(e){e.preventDefault();$("bulk-drop").classList.remove("drag");addBulkFiles(e.dataTransfer.files);});
+  $("bulk-clear").addEventListener("click", function(){ if(bulkFiles.length && !confirm("Clear this upload batch? No products will be added.")) return; clearBulk(); });
+  $("bulk-auto-name").addEventListener("change", function(){ if(!this.checked)return; bulkFiles.forEach(function(p){ if(!p.name) p.name=nameFromFilename(p.file); p.category=suggestCategory(p.name); }); renderBulkImages(); renderBulkGroups(); });
+  $("bulk-images").addEventListener("input", function(e){
+    var ni=e.target.dataset.bulkName, ci=e.target.dataset.bulkCat;
+    if(ni!==undefined){ var p=bulkFiles[Number(ni)]; if(p){p.name=e.target.value; p.category=suggestCategory(p.name); var cs=$("bulk-cat-"+ni); if(cs && p.category) cs.value=p.category; renderBulkGroups();} }
+  });
+  $("bulk-images").addEventListener("change", function(e){
+    var ci=e.target.dataset.bulkCat;
+    if(ci!==undefined){ bulkFiles[Number(ci)].category=e.target.value; renderBulkGroups(); }
+  });
+  $("bulk-groups").addEventListener("change", function(e){
+    var ci=e.target.dataset.groupCat, mi=e.target.dataset.bulkMain;
+    var si=e.target.dataset.groupSize, fi=e.target.dataset.groupFramed;
+    if(ci!==undefined){ var g=bulkGroups()[Number(ci)]; if(g) g.photos.forEach(function(p){p.category=e.target.value;}); renderBulkImages(); renderBulkGroups(); return; }
+    if(si!==undefined){
+      var gs=bulkGroups()[Number(si)]; if(!gs) return;
+      if (e.target.value === "Other") { var inp=$("bulk-group-size-custom-"+si); if (inp) { inp.classList.remove("hidden"); inp.focus(); } return; }
+      gs.photos.forEach(function(p){ if (e.target.value) p.size=e.target.value; else delete p.size; });
+      var inp2=$("bulk-group-size-custom-"+si); if (inp2) inp2.classList.add("hidden");
+      return;
+    }
+    if(fi!==undefined){ var gf=bulkGroups()[Number(fi)]; if(gf) gf.photos.forEach(function(p){ if (e.target.value) p.framed=e.target.value; else delete p.framed; }); return; }
+    if(mi!==undefined){ var chosen=bulkFiles[Number(mi)]; if(chosen){ var key=groupKeyFor(chosen.name); bulkFiles.forEach(function(p){if(groupKeyFor(p.name)===key)p.main=false;}); chosen.main=true; renderBulkGroups(); } }
+  });
+  $("bulk-groups").addEventListener("input", function(e){
+    var sci=e.target.dataset.groupSizeCustom;
+    if(sci!==undefined){ var g=bulkGroups()[Number(sci)]; if(g) g.photos.forEach(function(p){ var v=e.target.value.trim(); if (v) p.size=v; else delete p.size; }); }
+  });
+  $("bulk-confirm").addEventListener("change", updateBulkApprove);
+  $("bulk-approve").addEventListener("click", async function(){
+    var groups=bulkGroups(); updateBulkApprove();
+    if(this.disabled) return;
+    var btn=this; btn.disabled=true; btn.textContent="Uploading photos…"; $("bulk-error").textContent="";
+    try {
+      for(var gi=0;gi<groups.length;gi++){
+        var g=groups[gi];
+        var d=defaults(g.category); var id=nextId();
+        var sorted=g.photos.slice().sort(function(a,b){return (b.main?1:0)-(a.main?1:0);});
+        var photos=[];
+        for(var pi=0;pi<sorted.length;pi++){
+          var photo=sorted[pi]; var blob=await shrink(photo.file);
+          var uploaded=await api("/api/upload",{method:"POST",headers:{"content-type":"image/jpeg"},body:blob});
+          var kind=pi===0?"Plain":pi===1?"Boutique Display":"Lifestyle";
+          var text=photoText(kind,g.category);
+          photos.push({src:uploaded.src,kind:kind,label:text.label,note:text.note});
+        }
+        var newItem={id:id,category:g.category,name:g.name.trim(),made:d.made,hooks:null,status:"available",price:d.price,desc:"",photos:photos};
+        if (g.size) newItem.size=g.size;
+        if (g.category==="Photo Prints" && g.framed) newItem.framed=g.framed;
+        items.push(newItem);
+      }
+      setDirty(true); buildFilter(); renderList();
+      clearBulk(); toast("Products added to Admin. Click Save changes to store them.");
+      window.scrollTo({top:0,behavior:"smooth"});
+    } catch(err) {
+      $("bulk-error").textContent="Upload stopped: "+err.message+". Any photos already uploaded remain unused until you save a product; review the batch and try again.";
+      toast("Bulk upload stopped. Please review the error.",true);
+    } finally { btn.textContent="Approve & add products"; updateBulkApprove(); }
+  });
+
+  /* ---------- save ---------- */
+  $("save").addEventListener("click", function () {
+    if (uploading) { toast("Wait for the photo to finish uploading.", true); return; }
+    // Make sure every item is complete before sending.
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var problem = !it.name.trim() ? "needs a name" : !it.photos.length ? "needs a main photo" : !(Number(it.price) > 0) ? "needs a price" : "";
+      if (problem) {
+        select(it.id);
+        $("form-err").textContent = "This item " + problem + " before you can save.";
+        toast("“" + (it.name || "Unnamed item") + "” " + problem + ".", true);
+        return;
+      }
+    }
+    var btn = $("save");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    api("/api/items", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ items: items }) })
+      .then(function (r) {
+        setDirty(false);
+        toast("Saved — " + r.count + " items are live.");
+      })
+      .catch(function (err) {
+        if (err.status === 401) { sessionStorage.removeItem("craft-admin-pw"); toast("Session expired — reload and sign in again.", true); }
+        else toast(err.message, true);
+      })
+      .then(function () { btn.disabled = false; btn.textContent = "Save changes"; });
+  });
+})();
+</script>
+</body>
+</html>
