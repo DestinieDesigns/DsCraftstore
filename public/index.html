@@ -1387,6 +1387,18 @@
 
       .product-body .btn-add-cart { display:flex; align-items:center; justify-content:center; width:100%; min-height:48px; padding:12px 20px; border:1.5px solid #c7a45a; border-radius:999px; background:#fffaf0; color:#1f4d36; font:600 16px/1.25 "Jost",system-ui,sans-serif; letter-spacing:.02em; cursor:pointer; transition:background-color .25s ease, box-shadow .25s ease; }
       .product-body .btn-add-cart:hover { background:#c7a45a; color:#123e32; box-shadow:0 3px 12px rgba(32,58,42,.14); }
+      .btn-tryon { display:flex; align-items:center; justify-content:center; width:100%; min-height:48px; margin-top:10px; padding:12px 20px; border:1.5px solid #c7a45a; border-radius:999px; background:transparent; color:#1f4d36; font:600 16px/1.25 "Jost",system-ui,sans-serif; letter-spacing:.02em; cursor:pointer; }
+      .btn-tryon:hover { background:#fff3d6; }
+      .tryon-backdrop { position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; background:rgba(20,30,22,.72); padding:16px; }
+      .tryon-card { width:min(560px,100%); background:#fffaf0; border-radius:18px; padding:18px; box-shadow:0 12px 40px rgba(0,0,0,.35); }
+      .tryon-card h3 { margin:0 0 8px; color:#1f4d36; font:600 22px/1.2 "Jost",system-ui,sans-serif; }
+      .tryon-note { margin:0 0 12px; color:#59635b; font:14px/1.45 system-ui,sans-serif; }
+      .tryon-stage { position:relative; width:100%; background:#22352a; border-radius:12px; overflow:hidden; }
+      .tryon-stage canvas { display:block; width:100%; height:auto; }
+      .tryon-video { position:absolute; width:1px; height:1px; opacity:0; }
+      .tryon-status { min-height:20px; margin:10px 0; color:#59635b; font:14px/1.4 system-ui,sans-serif; }
+      .tryon-actions { display:flex; gap:10px; }
+      .tryon-actions button { flex:1; min-height:44px; border:1.5px solid #c7a45a; border-radius:999px; background:#fffaf0; color:#1f4d36; font:600 15px/1.25 "Jost",system-ui,sans-serif; cursor:pointer; }
       .order-request-form { display:grid; gap:10px; padding-top:8px; }
       .order-request-form[hidden] { display:none !important; }
       .order-request-form h3,.order-request-form p { margin:0; }
@@ -1813,6 +1825,7 @@
             <li><b>Fulfilment</b><span>Pickup at monthly events, or shipping at extra cost (calculated per item)</span></li>
           </ul>
           <button class="btn-add-cart" id="btn-add-cart" type="button">＋ Add to Cart</button>
+          <button class="btn-tryon" id="btn-tryon" type="button" style="display:none">Try it on</button>
           <p class="policy-note">All sales are final — no refunds, no returns.</p>
         </div>
       </main>
@@ -2433,6 +2446,15 @@
           thumbsEl.appendChild(t);
         });
         setPhoto(0);
+        var tryBtn = document.getElementById("btn-tryon");
+        var tryPhoto = (currentItem.photos || []).find(function (p) { return p && p.src; });
+        if (currentItem.category === "Earrings" && tryPhoto) {
+          tryBtn.style.display = "";
+          tryBtn.setAttribute("data-photo", tryPhoto.src);
+        } else {
+          tryBtn.style.display = "none";
+          tryBtn.setAttribute("data-photo", "");
+        }
 
         showScreen("screen-product");
       }
@@ -2864,6 +2886,191 @@
           })
           .catch(function () { /* offline or no back end: built-in items stay */ });
       })();
+    </script>
+    <!-- ================= VIRTUAL TRY-ON ================= -->
+    <div class="tryon-backdrop" id="tryon-backdrop" style="display:none" role="dialog" aria-label="Virtual try-on">
+      <div class="tryon-card">
+        <h3>Try it on</h3>
+        <p class="tryon-note">Hold the earrings up beside your ear. This is a fun preview, not an exact fitting — colours and size will be close, not perfect. Your camera stays on your phone; nothing is uploaded.</p>
+        <div class="tryon-stage">
+          <video class="tryon-video" id="tryon-video" autoplay playsinline muted></video>
+          <canvas id="tryon-canvas"></canvas>
+        </div>
+        <p class="tryon-status" id="tryon-status">Starting your camera…</p>
+        <div class="tryon-actions">
+          <button type="button" id="tryon-flip">Switch side</button>
+          <button type="button" id="tryon-close">Done</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      /* ---------- Virtual try-on: earrings, live camera, local only ---------- */
+      var tryOn = { stream: null, landmarker: null, raf: 0, sticker: null, stickerSrc: "", side: -1, lastTime: -1 };
+      function tryOnSetStatus(t) {
+        var el = document.getElementById("tryon-status");
+        if (el) el.textContent = t;
+      }
+      function tryOnKeyOut(img) {
+        var max = 480;
+        var scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        var w = Math.max(1, Math.round(img.naturalWidth * scale));
+        var h = Math.max(1, Math.round(img.naturalHeight * scale));
+        var c = document.createElement("canvas");
+        c.width = w;
+        c.height = h;
+        var ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        var data = ctx.getImageData(0, 0, w, h);
+        var px = data.data;
+        var patch = Math.min(12, w, h);
+        var sr = 0, sg = 0, sb = 0, n = 0;
+        function sample(x0, y0) {
+          for (var y = y0; y < y0 + patch; y++) {
+            for (var x = x0; x < x0 + patch; x++) {
+              var i = (y * w + x) * 4;
+              sr += px[i]; sg += px[i + 1]; sb += px[i + 2]; n++;
+            }
+          }
+        }
+        sample(0, 0);
+        sample(w - patch, 0);
+        sample(0, h - patch);
+        sample(w - patch, h - patch);
+        var br = sr / n, bg = sg / n, bb = sb / n;
+        for (var p = 0; p < px.length; p += 4) {
+          var dr = px[p] - br, dg = px[p + 1] - bg, db = px[p + 2] - bb;
+          var dist = Math.sqrt(dr * dr + dg * dg + db * db);
+          var a;
+          if (dist <= 42) a = 0;
+          else if (dist >= 90) a = 255;
+          else a = Math.round(255 * (dist - 42) / 48);
+          px[p + 3] = a;
+        }
+        ctx.putImageData(data, 0, 0);
+        return c;
+      }
+      function tryOnLoadSticker(src) {
+        return new Promise(function (resolve, reject) {
+          var img = new Image();
+          img.onload = function () {
+            try { resolve(tryOnKeyOut(img)); } catch (e) { reject(e); }
+          };
+          img.onerror = function () { reject(new Error("photo")); };
+          img.src = (typeof ddImageUrl === "function" ? ddImageUrl(src) : src);
+        });
+      }
+      function tryOnDraw(res) {
+        var video = document.getElementById("tryon-video");
+        var canvas = document.getElementById("tryon-canvas");
+        var ctx = canvas.getContext("2d");
+        var w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.save();
+        ctx.translate(w, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, 0, 0, w, h);
+        ctx.restore();
+        var faces = res && res.faceLandmarks;
+        if (!faces || !faces.length) {
+          tryOnSetStatus("Move your face into frame so the earrings can find your ear.");
+          return;
+        }
+        var lm = faces[0];
+        function mx(i) { return 1 - lm[i].x; }
+        var faceLeft = Math.min(mx(234), mx(454));
+        var faceRight = Math.max(mx(234), mx(454));
+        var eyeY = (lm[33].y + lm[263].y) / 2;
+        var chinY = lm[152].y;
+        var topY = lm[10].y;
+        var faceH = (chinY - topY) * h;
+        var earY = (eyeY + 0.35 * (chinY - eyeY)) * h;
+        if (tryOn.sticker) {
+          var ph = faceH * 0.55;
+          var pw = ph * (tryOn.sticker.width / tryOn.sticker.height);
+          var px = (tryOn.side < 0) ? (faceLeft * w - pw - 10) : (faceRight * w + 10);
+          var py = earY - ph / 2;
+          ctx.drawImage(tryOn.sticker, px, py, pw, ph);
+        }
+        tryOnSetStatus("");
+      }
+      function tryOnLoop() {
+        var video = document.getElementById("tryon-video");
+        try {
+          if (video.readyState >= 2 && video.currentTime !== tryOn.lastTime) {
+            tryOn.lastTime = video.currentTime;
+            var res = tryOn.landmarker.detectForVideo(video, performance.now());
+            tryOnDraw(res);
+          }
+        } catch (e) { /* keep the loop alive; next frame retries */ }
+        tryOn.raf = requestAnimationFrame(tryOnLoop);
+      }
+      async function tryOnStart(src) {
+        var backdrop = document.getElementById("tryon-backdrop");
+        var video = document.getElementById("tryon-video");
+        var canvas = document.getElementById("tryon-canvas");
+        backdrop.style.display = "flex";
+        tryOnSetStatus("Starting your camera\u2026");
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("nocamera");
+          tryOn.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 } }, audio: false });
+        } catch (e) {
+          tryOnSetStatus("Camera not available. Check that this site may use your camera, then try again.");
+          return;
+        }
+        video.srcObject = tryOn.stream;
+        try { await video.play(); } catch (e) { /* play may resolve on its own */ }
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        tryOnSetStatus("Loading face tracking\u2026");
+        try {
+          if (!tryOn.landmarker) {
+            var vision = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
+            var fileset = await vision.FilesetResolver.forVision({ wasm: "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm" });
+            tryOn.landmarker = await vision.FaceLandmarker.createFromOptions(fileset, {
+              baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate: "GPU" },
+              runningMode: "VIDEO",
+              numFaces: 1
+            });
+          }
+        } catch (e) {
+          tryOnSetStatus("Face tracking could not load. Check your connection and try again.");
+          return;
+        }
+        tryOnSetStatus("Making your earring preview\u2026");
+        try {
+          if (tryOn.stickerSrc !== src) {
+            tryOn.sticker = await tryOnLoadSticker(src);
+            tryOn.stickerSrc = src;
+          }
+        } catch (e) {
+          tryOnSetStatus("Could not load this photo for try-on. Try again in a moment.");
+          return;
+        }
+        tryOnSetStatus("");
+        tryOn.lastTime = -1;
+        cancelAnimationFrame(tryOn.raf);
+        tryOn.raf = requestAnimationFrame(tryOnLoop);
+      }
+      function tryOnStop() {
+        cancelAnimationFrame(tryOn.raf);
+        tryOn.raf = 0;
+        if (tryOn.stream) {
+          tryOn.stream.getTracks().forEach(function (t) { t.stop(); });
+          tryOn.stream = null;
+        }
+        var video = document.getElementById("tryon-video");
+        video.srcObject = null;
+        document.getElementById("tryon-backdrop").style.display = "none";
+      }
+      document.getElementById("btn-tryon").addEventListener("click", function () {
+        var src = this.getAttribute("data-photo");
+        if (src) tryOnStart(src);
+      });
+      document.getElementById("tryon-close").addEventListener("click", tryOnStop);
+      document.getElementById("tryon-flip").addEventListener("click", function () { tryOn.side = -tryOn.side; });
+      document.getElementById("tryon-backdrop").addEventListener("click", function (e) {
+        if (e.target === this) tryOnStop();
+      });
     </script>
   </body>
 </html>
