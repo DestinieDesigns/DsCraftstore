@@ -15,6 +15,8 @@ it takes effect. Then sign in at /admin.html with that password.
 
 What is inside: the storefront (Event Mode: cart -> invoice -> pay in person
 within 30 minutes), size options for every category, framed/unframed for
-prints, the optional item-code box, and the admin + orders tools. Photos are
+prints, the optional item-code box, the admin + orders tools, and the
+earring virtual try-on. Current inventory: 26 items, including the Blue
+Butterfly Keychain and 5 photo prints ($1, 4x6, Unframed). Photos are
 NOT bundled here on purpose — they live in the back end and are added
 through admin upload.
